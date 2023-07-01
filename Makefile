@@ -11,6 +11,8 @@ CFLAGS = --target=i386-pc-none-elf -ffreestanding -O2 -std=c99 -Wall -Wextra
 ASFLAGS = -felf32
 LDFLAGS = -nostdlib
 
+all: build/os.bin
+
 build/os.bin: ./build/kernel.c.o ./build/boot.asm.o
 	clang -T $(LINKER_PATH) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
