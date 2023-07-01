@@ -68,11 +68,16 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
 }
 
 void terminal_putchar(char c) {
-    terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
-    if (++terminal_column == VGA_WIDTH) {
+    if(c == '\n') {
         terminal_column = 0;
-        if (++terminal_row == VGA_HEIGHT)
-            terminal_row = 0;
+        terminal_row++;
+    } else {
+        terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+        if (++terminal_column == VGA_WIDTH) {
+            terminal_column = 0;
+            if (++terminal_row == VGA_HEIGHT)
+                terminal_row = 0;
+        }
     }
 }
 
@@ -90,5 +95,5 @@ void kernel_main(void) {
     terminal_initialize();
 
     /* Newline support is left as an exercise. */
-    terminal_writestring("Changed Text\n");
+    terminal_writestring("First Line\nSecond Line\nA very long line that will certainly overflow the 80 character limit of this text mode, causing it to wrap to the next line\nAnother Line");
 }
