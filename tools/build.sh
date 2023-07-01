@@ -1,3 +1,3 @@
 
-cd ../kernel && make
+cd .. && make
 
