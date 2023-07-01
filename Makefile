@@ -1,28 +1,16 @@
+MODULES = libk libc kernel
 
-BUILD_DIR ?= ./build
-SRC_C_DIR ?= ./src/c
-SRC_ASM_DIR ?= ./src/asm
-SRC_LD_DIR ?= ./src/ld
-LINKER_PATH = src/ld/linker.ld
+.PHONY: all clean $(MODULES)
 
-MKDIR_P ?= mkdir -p
+all: $(MODULES)
 
-CFLAGS = --target=i386-pc-none-elf -ffreestanding -O2 -std=c99 -Wall -Wextra
-ASFLAGS = -felf32
-LDFLAGS = -nostdlib
-
-all: build/os.bin
-
-build/os.bin: ./build/kernel.c.o ./build/boot.asm.o
-	clang -T $(LINKER_PATH) $(CFLAGS) $^ -o $@ $(LDFLAGS)
-
-$(BUILD_DIR)/%.asm.o: $(SRC_ASM_DIR)/%.asm
-	$(MKDIR_P) $(dir $@)
-	nasm $(ASFLAGS) $< -o $@
-
-$(BUILD_DIR)/%.c.o: $(SRC_C_DIR)/%.c
-	$(MKDIR_P) $(dir $@)
-	clang $(CFLAGS) -c $< -o $@
+$(MODULES):
+	$(MAKE) -C $@
 
 clean:
-	$(RM) -r $(BUILD_DIR)
+	$(RM) -r ./build
+	for module in $(MODULES); do \
+  		$(MAKE) -C $$module clean; \
+  	done
+
+.PHONY: all clean
