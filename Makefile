@@ -1,4 +1,4 @@
-MODULES = libc kernel
+MODULES = libk libc kernel
 
 .PHONY: all clean $(MODULES)
 

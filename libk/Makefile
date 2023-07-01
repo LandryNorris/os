@@ -7,14 +7,14 @@ LINKER_PATH = src/ld/linker.ld
 
 MKDIR_P ?= mkdir -p
 
-INCLUDE_FLAGS = -I ./include -I../libk/include
+INCLUDE_FLAGS = -I./include -I../libc/include
 CFLAGS = --target=i386-pc-none-elf -ffreestanding -O2 -std=c99 -Wall -Wextra $(INCLUDE_FLAGS)
 ASFLAGS = -felf32
-LDFLAGS = -nostdlib -L../libk/build -lk
+LDFLAGS = -nostdlib
 
-all: build/libc.a
+all: build/libk.a
 
-build/libc.a: ./build/strlen.c.o ./build/stdio/putc.c.o ./build/stdio/puts.c.o
+build/libk.a: ./build/color/vga_color.c.o ./build/terminal/terminal_state.c.o ./build/terminal/write.c.o ./build/terminal/initialize.c.o
 	ar rcs $@ $^
 
 $(BUILD_DIR)/%.c.o: $(SRC_C_DIR)/%.c
