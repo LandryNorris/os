@@ -1,5 +1,9 @@
 MODULES = libk libc kernel
 
+# We don't actually need these flags. CLion needs them to understand
+# the include structure, since it can't read inner Makefiles.
+CFLAGS = -Ikernel/include -Ilibc/include -Ilibk/include
+
 .PHONY: all clean $(MODULES)
 
 all: $(MODULES)
