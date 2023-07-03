@@ -11,7 +11,7 @@ extern const size_t VGA_HEIGHT;
 extern size_t terminal_row;
 extern size_t terminal_column;
 extern uint8_t terminal_color;
-extern uint16_t* terminal_buffer;
+__attribute__((unused)) extern uint16_t* terminal_buffer;
 
 void terminal_initialize(void);
 int terminal_putchar(char c);
