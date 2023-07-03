@@ -1,4 +1,3 @@
-
 #include "terminal.h"
 #include "color.h"
 #include <stddef.h>
@@ -45,4 +44,3 @@ int terminal_puts(const char* data) {
 
     return len;
 }
-

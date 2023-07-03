@@ -1,4 +1,3 @@
-
 #ifndef OS_TERMINAL_H
 #define OS_TERMINAL_H
 

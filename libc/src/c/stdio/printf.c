@@ -1,4 +1,4 @@
 
-int printf(const char* __restrict s, ...) {
+__attribute__((unused)) int printf(const char* __restrict s, ...) {
     return 0;
 }
