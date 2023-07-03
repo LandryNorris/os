@@ -40,7 +40,7 @@ void terminal_write(const char* data, size_t size) {
 }
 
 int terminal_puts(const char* data) {
-    int len = k_strlen(data);
+    int len = (int) k_strlen(data);
     terminal_write(data, len);
 
     return len;
