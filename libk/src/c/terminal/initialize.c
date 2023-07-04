@@ -1,4 +1,3 @@
-
 #include <terminal.h>
 #include <color.h>
 #include <stdint.h>
