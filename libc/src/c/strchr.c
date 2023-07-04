@@ -1,3 +1,11 @@
-//
-// Created by landry on 7/4/23.
-//
+
+char *strchr(const char *str, int ch) {
+    char* s = str;
+    for(char c = *s; c; c = *++s) {
+        if(c == ch) {
+            return s;
+        }
+    }
+
+    return 0;
+}

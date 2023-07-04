@@ -107,7 +107,11 @@ int printf(const char* __restrict s, ...) {
                 isParsingFormat = 0;
             } else if(c == 's') {
                 char* string = va_arg(parameters, char*);
-                puts(string);
+                if(string) {
+                    puts(string);
+                } else {
+                    puts("(null)");
+                }
                 isParsingFormat = 0;
             }
         } else if(isEscaped) {

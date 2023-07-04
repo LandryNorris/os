@@ -5,21 +5,10 @@
 void kernel_main(void) {
     terminal_initialize();
 
-    char s1[100] = "Hello, ";
-    char* s2 = "World";
+    char* text = "The quick brown fox jumped over the lazy dog";
 
-    strcat(s1, s2);
-    puts(s1);
-    putchar('\n');
+    char* subtext = strchr(text, 'o');
+    char* empty = strchr(text, '@');
 
-    char first[100] = "Here ";
-    char* second = "is ";
-    char* third = "some ";
-    char* fourth = "text\n";
-
-    strcat(first, second);
-    strcat(first, third);
-    strcat(first, fourth);
-
-    puts(first);
+    printf("%s\n%s\n%s", text, subtext, empty);
 }
