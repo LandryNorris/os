@@ -1,8 +1,14 @@
 #include <stdio.h>
 #include <terminal.h>
+#include <string.h>
 
 __attribute__((unused)) void kernel_main(void) {
     terminal_initialize();
 
-    puts("First Line\nSecond Line\nA very long line that will certainly overflow the 80 character limit of this text mode, causing it to wrap to the next line\nAnother Line");
+    char* text = "some text we're about to overwrite.";
+    char* t2 = "Hello, World";
+
+    strcpy(text, t2);
+
+    printf("%s\n%s\n", text, t2);
 }

@@ -14,7 +14,7 @@ LDFLAGS = -nostdlib -L../libk/build -lk
 
 all: build/libc.a
 
-build/libc.a: ./build/strlen.c.o ./build/stdio/putc.c.o ./build/stdio/puts.c.o
+build/libc.a: ./build/string/strlen.c.o ./build/stdio/putc.c.o ./build/stdio/puts.c.o ./build/stdio/printf.c.o ./build/string/memutils.c.o ./build/string/strcat.c.o ./build/string/strchr.c.o ./build/string/strcpy.c.o
 	ar rcs $@ $^
 
 $(BUILD_DIR)/%.c.o: $(SRC_C_DIR)/%.c
