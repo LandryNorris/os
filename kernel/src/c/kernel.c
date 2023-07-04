@@ -2,7 +2,7 @@
 #include <terminal.h>
 #include <string.h>
 
-void kernel_main(void) {
+__attribute__((unused)) void kernel_main(void) {
     terminal_initialize();
 
     char* text = "some text we're about to overwrite.";
