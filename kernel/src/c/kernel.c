@@ -5,10 +5,10 @@
 void kernel_main(void) {
     terminal_initialize();
 
-    char* text = "The quick brown fox jumped over the lazy dog";
+    char* text = "some text we're about to overwrite.";
+    char* t2 = "Hello, World";
 
-    char* subtext = strchr(text, 'o');
-    char* empty = strchr(text, '@');
+    strcpy(text, t2);
 
-    printf("%s\n%s\n%s", text, subtext, empty);
+    printf("%s\n%s\n", text, t2);
 }

@@ -9,6 +9,7 @@ void* memmove(void*, const void*, size_t);
 void* memset(void*, int, size_t);
 size_t strlen(const char*);
 char* strcat(char*, char*);
-char *strchr(const char*, int);
+char* strchr(const char*, int);
+char* strcpy(char*, const char*);
 
 #endif //OS_STRING_H
