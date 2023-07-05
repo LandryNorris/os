@@ -26,18 +26,28 @@ align 4
 ; System V ABI standard and de-facto extensions. The compiler will assume the
 ; stack is properly aligned and failure to align the stack will result in
 ; undefined behavior.
-section .bss
-align 16
+section .bootstrap_stack
+    align 4096
 stack_bottom:
-resb 16384 ; 16 KiB
+    resb 16384 ; 16 KiB
 stack_top:
- 
+
+; Preallocate some pages. We're letting the bootloader know we want these pages.
+section .bss
+	align 4096
+boot_page_directory:
+	resb 4096
+boot_page_table1:
+	resb 4096
+; Add more tables as needed if kernel grows over 3MiB
+
 ; The linker script specifies _start as the entry point to the kernel and the
 ; bootloader will jump to this position once the kernel has been loaded. It
 ; doesn't make sense to return from this function as the bootloader is gone.
 ; Declare _start as a function symbol with the given symbol size.
 section .text
-global _start:function (_start.end - _start)
+    align 16
+global _start
 _start:
 	; The bootloader has loaded us into 32-bit protected mode on a x86
 	; machine. Interrupts are disabled. Paging is disabled. The processor
@@ -49,42 +59,95 @@ _start:
 	; safeguards, no debugging mechanisms, only what the kernel provides
 	; itself. It has absolute and complete power over the
 	; machine.
- 
-	; To set up a stack, we set the esp register to point to the top of our
-	; stack (as it grows downwards on x86 systems). This is necessarily done
-	; in assembly as languages such as C cannot function without a stack.
-	mov esp, stack_top
- 
-	; This is a good place to initialize crucial processor state before the
-	; high-level kernel is entered. It's best to minimize the early
-	; environment where crucial features are offline. Note that the
-	; processor is not fully initialized yet: Features such as floating
-	; point instructions and instruction set extensions are not initialized
-	; yet. The GDT should be loaded here. Paging should be enabled here.
-	; C++ features such as global constructors and exceptions will require
-	; runtime support to work as well.
- 
-	; Enter the high-level kernel. The ABI requires the stack is 16-byte
-	; aligned at the time of the call instruction (which afterwards pushes
-	; the return pointer of size 4 bytes). The stack was originally 16-byte
-	; aligned above and we've since pushed a multiple of 16 bytes to the
-	; stack since (pushed 0 bytes so far) and the alignment is thus
-	; preserved and the call is well defined.
-        ; note, that if you are building on Windows, C functions may have "_" prefix in assembly: _kernel_main
-	extern kernel_main
-	call kernel_main
- 
-	; If the system has nothing more to do, put the computer into an
-	; infinite loop. To do that:
-	; 1) Disable interrupts with cli (clear interrupt enable in eflags).
-	;    They are already disabled by the bootloader, so this is not needed.
-	;    Mind that you might later enable interrupts and return from
-	;    kernel_main (which is sort of nonsensical to do).
-	; 2) Wait for the next interrupt to arrive with hlt (halt instruction).
-	;    Since they are disabled, this will lock up the computer.
-	; 3) Jump to the hlt instruction if it ever wakes up due to a
-	;    non-maskable interrupt occurring or due to system management mode.
-	cli
+
+    ; Physical address of the first boot page table.
+	mov edi, boot_page_table1 - 0xC0000000
+
+    ; map address 0
+	mov esi, 0
+
+	; map 1023 pages. The 1024th is VGA.
+	mov ecx, 1023
+
+	extern _kernel_start
+	extern _kernel_end
+
+.loop_start:
+    ; skip mapping if we're not at the kernel yet.
+	cmp esi, _kernel_start
+	jl .below_kernel
+
+    ; initialize vga if we're at the kernel end.
+	cmp esi, _kernel_end - 0xC0000000
+    jge .initialize_vga
+
+    ; Map physical address as "present, writable". Note that this maps
+    ; .text and .rodata as writable. Mind security and map them as non-writable.
+    mov edx, esi
+    or edx, 0x003
+    mov [edi], edx ; edi points to boot_page_table1.
+
+.below_kernel:
+    ; Size of page is 4096 bytes.
+    add esi, 4096
+    ; Size of entries in boot_page_table1 is 4 bytes.
+    add edi, 4
+    ; Loop to the next entry if we haven't finished.
+    loop .loop_start
+
+.initialize_vga:
+    ; Map VGA video memory to 0xC03FF000 as "present, writable".
+    ; In the next part we set boot_page_table1 to map to the range
+    ; 0xC0000000 to 0xC03FFFFF. Here, we set the 4kiB starting at
+    ; (0xC0000000 + (1023*4096) = 0xC03FF000) to map to the physical
+    ; address 0xB8000.
+    ;
+    ; Each entry in the boot_page_table1 is 4 bytes long.
+    mov dword [boot_page_table1 - 0xC0000000 + 1023 * 4], 0x000B8000 | 0x003
+
+    ; The page table is used at both page directory entry 0 (virtually from 0x0
+    ; to 0x3FFFFF) (thus identity mapping the kernel) and page directory entry
+    ; 768 (virtually from 0xC0000000 to 0xC03FFFFF) (thus mapping it in the
+    ; # higher half). The kernel is identity mapped because enabling paging does
+    ; # not change the next instruction, which continues to be physical. The CPU
+    ; # would instead page fault if there was no identity mapping.
+
+    ; Map the page table to both virtual addresses 0x00000000 and 0xC0000000
+    mov dword [boot_page_directory - 0xC0000000 + 0], (boot_page_table1 - 0xC0000000 + 0x003)
+    mov dword [boot_page_directory - 0xC0000000 + 768 * 4], (boot_page_table1 - 0xC0000000 + 0x003)
+
+    ; Set cr3 to the address of the boot_page_directory
+    mov ecx, (boot_page_directory - 0xC0000000)
+    mov cr3, ecx
+
+    ; Enable paging and the write-protect bit
+    mov ecx, cr0
+    or ecx, 0x80010000
+    mov cr0, ecx
+
+    ; Jump to higher half with an absolute jump
+    lea ecx, [.start_kernel]
+    jmp ecx
+
+ .start_kernel:
+    ; At this point, paging is fully set up and enabled.
+
+    ; Unmap the identity mapping as it is now unnecessary.
+    mov dword [boot_page_directory + 0], 0
+
+    ; Reload cr3 to force a TLB flush so the changes take effect.
+    mov ecx, cr3
+    mov cr3, ecx
+
+    ; Set up the stack.
+    mov esp, stack_top
+
+    ; Enter the high-level kernel.
+    extern kernel_main
+    call kernel_main
+
+    ; kernel has exited. We have nothing left to do.
+    ; Disable interrupts and enter infinite loop.
+    cli
 .hang:	hlt
 	jmp .hang
-.end:
