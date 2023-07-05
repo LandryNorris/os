@@ -59,6 +59,8 @@ void initializeGdt() {
      * 0 access bit, always 0, cpu set this to 1 when accessing this sector
      */
     setGdtEntry(4, 0, 0xFFFFFFFF, 0xF2, 0xCF);
+
+    setGdt((uint32_t) &gdtPtr);
 }
 
 void setGdtEntry(int index, uint32_t base, uint32_t limit, uint8_t access, uint8_t flags) {

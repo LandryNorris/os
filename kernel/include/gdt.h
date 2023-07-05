@@ -25,5 +25,6 @@ typedef struct {
 
 void initializeGdt();
 void setGdtEntry(int index, uint32_t base, uint32_t limit, uint8_t access, uint8_t flags);
+extern void setGdt(uint32_t gdtPtr);
 
 #endif //OS_GDT_H
