@@ -14,7 +14,7 @@ LDFLAGS = -nostdlib -L../libc/build/ -L../libk/build -lc -lk
 
 all: build/os.bin
 
-build/os.bin: ./build/kernel.c.o ./build/boot.asm.o
+build/os.bin: ./build/kernel.c.o ./build/boot.asm.o ./build/gdt/gdt.c.o
 	clang -T $(LINKER_PATH) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 $(BUILD_DIR)/%.asm.o: $(SRC_ASM_DIR)/%.asm
