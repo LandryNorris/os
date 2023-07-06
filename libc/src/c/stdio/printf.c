@@ -112,6 +112,10 @@ int printf(const char* __restrict s, ...) {
                     puts("(null)");
                 }
                 isParsingFormat = 0;
+            } else if(c == 'c') {
+                char character = va_arg(parameters, int);
+                putchar(character);
+                isParsingFormat = 0;
             }
         } else if(isEscaped) {
             if(c == '\\') {
