@@ -15,7 +15,6 @@
 #define ICW4_BUF_MASTER	0x0C		/* Buffered mode/master */
 #define ICW4_SFNM	0x10		/* Special fully nested (not) */
 
-
 void initPic(int offset1, int offset2) {
     //save current state
     uint8_t a1 = inportByte(PIC1_DATA);
