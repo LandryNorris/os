@@ -12,9 +12,17 @@ CFLAGS = --target=i386-pc-none-elf -ffreestanding -O2 -std=c99 -Wall -Wextra $(I
 ASFLAGS = -felf32
 LDFLAGS = -nostdlib -L../libc/build/ -L../libk/build -lc -lk
 
+# Find all source files
+SRCS_C := $(shell find $(SRC_C_DIR) -name '*.c')
+SRCS_ASM := $(shell find $(SRC_ASM_DIR) -name '*.asm')
+
+# Generate object file names
+OBJS_C := $(SRCS_C:$(SRC_C_DIR)/%.c=$(BUILD_DIR)/%.c.o)
+OBJS_ASM := $(SRCS_ASM:$(SRC_ASM_DIR)/%.asm=$(BUILD_DIR)/%.asm.o)
+
 all: build/os.bin
 
-build/os.bin: ./build/kernel.c.o ./build/boot.asm.o ./build/gdt.asm.o ./build/gdt/gdt.c.o ./build/pic/pic.c.o ./build/exceptions.asm.o ./build/interrupts.asm.o ./build/isr/interrupt.c.o ./build/isr/exception.c.o ./build/idt/idt.c.o ./build/interrupts/keyboard.c.o ./build/idt.asm.o
+build/os.bin: $(OBJS_C) $(OBJS_ASM)
 	clang -T $(LINKER_PATH) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 $(BUILD_DIR)/%.asm.o: $(SRC_ASM_DIR)/%.asm

@@ -1,7 +1,6 @@
 
 BUILD_DIR ?= ./build
 SRC_C_DIR ?= ./src/c
-SRC_ASM_DIR ?= ./src/asm
 SRC_LD_DIR ?= ./src/ld
 LINKER_PATH = src/ld/linker.ld
 
@@ -12,9 +11,15 @@ CFLAGS = --target=i386-pc-none-elf -ffreestanding -O2 -std=c99 -Wall -Wextra $(I
 ASFLAGS = -felf32
 LDFLAGS = -nostdlib -L../libk/build -lk
 
+# Find all source files
+SRCS_C := $(shell find $(SRC_C_DIR) -name '*.c')
+
+# Generate object file names
+OBJS_C := $(SRCS_C:$(SRC_C_DIR)/%.c=$(BUILD_DIR)/%.c.o)
+
 all: build/libc.a
 
-build/libc.a: ./build/string/strlen.c.o ./build/stdio/putc.c.o ./build/stdio/puts.c.o ./build/stdio/printf.c.o ./build/string/memutils.c.o ./build/string/strcat.c.o ./build/string/strchr.c.o ./build/string/strcpy.c.o
+build/libc.a: $(OBJS_C)
 	ar rcs $@ $^
 
 $(BUILD_DIR)/%.c.o: $(SRC_C_DIR)/%.c
