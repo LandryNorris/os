@@ -10,7 +10,7 @@
 // We've set up our kernel to load at 0xC0000000, so any absolute addresses need to
 // subtract this value.
 #define LOAD_MEMORY_ADDRESS 0xC0000000
-#define VGA_ADDRESS 0xC03FF000
+#define VGA_ADDRESS (LOAD_MEMORY_ADDRESS + 0xB8000)
 
 uint8_t inportByte(uint16_t port);
 void outportByte(uint16_t port, uint8_t data);
