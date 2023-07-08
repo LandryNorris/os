@@ -12,9 +12,15 @@ CFLAGS = --target=i386-pc-none-elf -ffreestanding -O2 -std=c99 -Wall -Wextra $(I
 ASFLAGS = -felf32
 LDFLAGS = -nostdlib
 
+# Find all source files
+SRCS_C := $(shell find $(SRC_C_DIR) -name '*.c')
+
+# Generate object file names
+OBJS_C := $(SRCS_C:$(SRC_C_DIR)/%.c=$(BUILD_DIR)/%.c.o)
+
 all: build/libk.a
 
-build/libk.a: ./build/terminal/terminal_state.c.o ./build/terminal/write.c.o ./build/terminal/initialize.c.o ./build/portio/portio.c.o
+build/libk.a: $(OBJS_C)
 	ar rcs $@ $^
 
 $(BUILD_DIR)/%.c.o: $(SRC_C_DIR)/%.c
