@@ -52,4 +52,6 @@ inline uint32_t getPageIndex(uint32_t virtualAddress) {
     return virtualAddress & 0xFFF;
 }
 
+void initPaging();
+
 #endif //OS_PAGING_H

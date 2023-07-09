@@ -2,7 +2,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include "pmm.h"
-#include "../../../include/pmm.h"
 
 /**
  * This bitmap
@@ -38,7 +37,7 @@ void initializePmm(uint32_t size) {
     pageCount = size / PAGE_SIZE;
     bitmapSize = pageCount / PAGES_PER_BUCKET;
 
-    printf("Page count is %d. Bitmap size is %d", pageCount, bitmapSize);
+    printf("Page count is %d. Bitmap size is %d\n", pageCount, bitmapSize);
 
     // We can speed up our writing by a factor of 4
     // by writing 32 bits at a time instead of 8.
@@ -69,8 +68,4 @@ uint32_t firstFreePage() {
 
     printf("Out of free blocks");
     return -1;
-}
-
-void allocatePage() {
-
 }
