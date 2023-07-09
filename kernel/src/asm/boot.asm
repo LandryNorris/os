@@ -49,8 +49,13 @@ section .data
 	align 4096
 	global boot_page_directory
 boot_page_directory:
+    ; 0x83 = 1 0 0 0 0 1 1, PS=1 (huge page. Points directly. No table). W=1, P=1
+    ; Because we specify this as a huge page, we don't need a table. Map lowest
+    ; 4MiB to lowest 4MiB (identity mapping)
     dd 0x00000083
     times(VMA_PAGE_DIRECTORY_INDEX - 1) dd 0
+    ; Same as above. We place this at VMA_PAGE_DIRECTORY_INDEX to map our
+    ; kernel's higher-half memory to the lowest 4MiB.
     dd 0x00000083
     times(1024 - VMA_PAGE_DIRECTORY_INDEX - 1) dd 0
 

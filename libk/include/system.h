@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 // We've set up our kernel to load at 0xC0000000, so any absolute addresses need to
-// subtract this value.
+// add this value.
 #define LOAD_MEMORY_ADDRESS 0xC0000000
 #define VGA_ADDRESS (LOAD_MEMORY_ADDRESS + 0xB8000)
 
