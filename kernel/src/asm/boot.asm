@@ -4,6 +4,17 @@ MEMINFO  equ  1 << 1            ; provide memory map
 MBFLAGS  equ  MBALIGN | MEMINFO ; this is the Multiboot 'flag' field
 MAGIC    equ  0x1BADB002        ; 'magic number' lets bootloader find the header
 CHECKSUM equ -(MAGIC + MBFLAGS)   ; checksum of above, to prove we are multiboot
+
+VMA_BASE equ 0xC0000000
+
+
+; The page table is used at both page directory entry 0 (virtually from 0x0
+; to 0x3FFFFF) (thus identity mapping the kernel) and page directory entry
+; 768 (virtually from 0xC0000000 to 0xC03FFFFF) (thus mapping it in the
+; # higher half). The kernel is identity mapped because enabling paging does
+; # not change the next instruction, which continues to be physical. The CPU
+; # would instead page fault if there was no identity mapping.
+VMA_PAGE_DIRECTORY_INDEX equ (VMA_BASE >> 22) ; VMA_BASE / 4MB = 768. This gives us the index in the page directory that refers to our VMA base address.
  
 ; Declare a multiboot header that marks the program as a kernel. These are magic
 ; values that are documented in the multiboot standard. The bootloader will
@@ -32,14 +43,21 @@ stack_bottom:
     resb 16384 ; 16 KiB
 stack_top:
 
-; Preallocate some pages. We're letting the bootloader know we want these pages.
-section .bss
+; Initialize page directory and identity map it.
+; Also map us to higher-half.
+section .data
 	align 4096
+	global boot_page_directory
 boot_page_directory:
-	resb 4096
-boot_page_table1:
-	resb 4096
-; Add more tables as needed if kernel grows over 3MiB
+    ; 0x83 = 1 0 0 0 0 1 1, PS=1 (huge page. Points directly. No table). W=1, P=1
+    ; Because we specify this as a huge page, we don't need a table. Map lowest
+    ; 4MiB to lowest 4MiB (identity mapping)
+    dd 0x00000083
+    times(VMA_PAGE_DIRECTORY_INDEX - 1) dd 0
+    ; Same as above. We place this at VMA_PAGE_DIRECTORY_INDEX to map our
+    ; kernel's higher-half memory to the lowest 4MiB.
+    dd 0x00000083
+    times(1024 - VMA_PAGE_DIRECTORY_INDEX - 1) dd 0
 
 ; The linker script specifies _start as the entry point to the kernel and the
 ; bootloader will jump to this position once the kernel has been loaded. It
@@ -60,65 +78,15 @@ _start:
 	; itself. It has absolute and complete power over the
 	; machine.
 
-    ; Physical address of the first boot page table.
-	mov edi, boot_page_table1 - 0xC0000000
-
-    ; map address 0
-	mov esi, 0
-
-	; map 1023 pages. The 1024th is VGA.
-	mov ecx, 1023
-
-	extern _kernel_start
-	extern _kernel_end
-
-.loop_start:
-    ; skip mapping if we're not at the kernel yet.
-	cmp esi, _kernel_start
-	jl .below_kernel
-
-    ; initialize vga if we're at the kernel end.
-	cmp esi, _kernel_end - 0xC0000000
-    jge .initialize_vga
-
-    ; Map physical address as "present, writable". Note that this maps
-    ; .text and .rodata as writable. Mind security and map them as non-writable.
-    mov edx, esi
-    or edx, 0x003
-    mov [edi], edx ; edi points to boot_page_table1.
-
-.below_kernel:
-    ; Size of page is 4096 bytes.
-    add esi, 4096
-    ; Size of entries in boot_page_table1 is 4 bytes.
-    add edi, 4
-    ; Loop to the next entry if we haven't finished.
-    loop .loop_start
-
-.initialize_vga:
-    ; Map VGA video memory to 0xC03FF000 as "present, writable".
-    ; In the next part we set boot_page_table1 to map to the range
-    ; 0xC0000000 to 0xC03FFFFF. Here, we set the 4kiB starting at
-    ; (0xC0000000 + (1023*4096) = 0xC03FF000) to map to the physical
-    ; address 0xB8000.
-    ;
-    ; Each entry in the boot_page_table1 is 4 bytes long.
-    mov dword [boot_page_table1 - 0xC0000000 + 1023 * 4], 0x000B8000 | 0x003
-
-    ; The page table is used at both page directory entry 0 (virtually from 0x0
-    ; to 0x3FFFFF) (thus identity mapping the kernel) and page directory entry
-    ; 768 (virtually from 0xC0000000 to 0xC03FFFFF) (thus mapping it in the
-    ; # higher half). The kernel is identity mapped because enabling paging does
-    ; # not change the next instruction, which continues to be physical. The CPU
-    ; # would instead page fault if there was no identity mapping.
-
-    ; Map the page table to both virtual addresses 0x00000000 and 0xC0000000
-    mov dword [boot_page_directory - 0xC0000000 + 0], (boot_page_table1 - 0xC0000000 + 0x003)
-    mov dword [boot_page_directory - 0xC0000000 + 768 * 4], (boot_page_table1 - 0xC0000000 + 0x003)
-
+.initialize_pages:
     ; Set cr3 to the address of the boot_page_directory
-    mov ecx, (boot_page_directory - 0xC0000000)
+    mov ecx, (boot_page_directory - VMA_BASE)
     mov cr3, ecx
+
+    ; Enable 4MB large pages
+    mov ecx, cr4;
+    or ecx, 0x00000010
+    mov cr4, ecx
 
     ; Enable paging and the write-protect bit
     mov ecx, cr0
@@ -130,8 +98,6 @@ _start:
     jmp ecx
 
  .start_kernel:
-    ; At this point, paging is fully set up and enabled.
-
     ; Unmap the identity mapping as it is now unnecessary.
     mov dword [boot_page_directory + 0], 0
 
