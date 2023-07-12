@@ -1,5 +1,6 @@
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdint.h>
 
 void printInt(long num) {
     // Handle negative numbers
@@ -24,6 +25,22 @@ void printInt(long num) {
         putchar(digit + '0');
         integralPart %= divisor;
         divisor /= 10;
+    }
+}
+
+void printHex(uint32_t value) {
+    const int numDigits = sizeof(uint32_t) * 2;
+
+    //Loop through digits in reverse
+    for (int i = (numDigits - 1) * 4; i >= 0; i -= 4) {
+        // Get the current hex digit value
+        uint32_t hex_digit = (value >> i) & 0xF;
+
+        // Convert the hex digit to its ASCII representation
+        char hex_char = hex_digit < 10 ? '0' + hex_digit : 'A' + (hex_digit - 10);
+
+        // Print the hex digit
+        putchar(hex_char);
     }
 }
 
@@ -115,6 +132,10 @@ int printf(const char* __restrict s, ...) {
             } else if(c == 'c') {
                 char character = va_arg(parameters, int);
                 putchar(character);
+                isParsingFormat = 0;
+            } else if(c == 'x') {
+                uint32_t value = va_arg(parameters, uint32_t);
+                printHex(value);
                 isParsingFormat = 0;
             }
         } else if(isEscaped) {

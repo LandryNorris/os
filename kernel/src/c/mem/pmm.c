@@ -21,7 +21,7 @@ inline uint32_t alignToPage(uint32_t ptr) {
     return (ptr & 0xFFFFF000) + 0x1000;
 }
 
-inline void setBit(int i) {
+inline void setBit(uint32_t i) {
     int index = i/PAGES_PER_BUCKET;
     int bitIndex = i % PAGES_PER_BUCKET;
     bitmap[index] |= (1 << bitIndex);
@@ -37,7 +37,7 @@ void initializePmm(uint32_t size) {
     pageCount = size / PAGE_SIZE;
     bitmapSize = pageCount / PAGES_PER_BUCKET;
 
-    printf("Page count is %d. Bitmap size is %d\n", pageCount, bitmapSize);
+    printf("Page count is %d. Bitmap size is %x. Bitmap is %x\n", pageCount, bitmapSize, bitmap);
 
     // We can speed up our writing by a factor of 4
     // by writing 32 bits at a time instead of 8.
@@ -49,23 +49,21 @@ void initializePmm(uint32_t size) {
     }
 }
 
+int isSet(uint32_t i) {
+    return ((bitmap[i / PAGES_PER_BUCKET] >> (i % PAGES_PER_BUCKET)) & 0x1);
+}
+
 uint32_t firstFreePage() {
-    //32-bit aligned index
-    int i = 0;
-
-    //first, we scan 4 bytes at a time for any bits being 0.
-    uint32_t* efficientBitmap = (uint32_t*) bitmap;
-    for(; i < bitmapSize/4; i++) {
-        //check 4 bytes at a time. Break if any bits are not set.
-        if(efficientBitmap[i] != 0xFFFFFFFF) break;
+    for(uint32_t i = 0; i < pageCount; i++) {
+        if(!isSet(i)) return i;
     }
 
-    //8-bit aligned index of the start of the word
-    int index = (i - 1) * 4;
-    for(; index < 4; index++) {
-        if(bitmap[index] != 0) return index;
-    }
-
-    printf("Out of free blocks");
+    printf("Out of free blocks\n");
     return -1;
+}
+
+uint32_t allocateNextPage() {
+    uint32_t index = firstFreePage();
+    setBit(index);
+    return index;
 }

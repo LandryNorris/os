@@ -24,8 +24,9 @@ PageDirectory* pageDirectory;
  * @param size
  */
 void* dumbMalloc(uint32_t size) {
+    void* result = tableAllocatorPtr;
     tableAllocatorPtr += size;
-    return tableAllocatorPtr;
+    return result;
 }
 
 void* convertVirtualToPhysical(PageDirectory* dir, uint32_t virtualAddress) {
@@ -52,7 +53,6 @@ void* convertVirtualToPhysical(PageDirectory* dir, uint32_t virtualAddress) {
 void allocatePage(PageDirectory* dir, uint32_t virtualAddress) {
     uint32_t dirIndex = getPageDirectoryIndex(virtualAddress);
     uint32_t tableIndex = getTableIndex(virtualAddress);
-    uint32_t pageIndex = getPageIndex(virtualAddress);
 
     PageTable* table = dir->tables[dirIndex];
 
@@ -60,11 +60,10 @@ void allocatePage(PageDirectory* dir, uint32_t virtualAddress) {
     if(!table) {
         // ToDo: use vmm if it's initialized.
         table = dumbMalloc(sizeof(PageTable));
-
         memset(table, 0, sizeof(PageTable));
 
         //we need to convert the address to physical. Just subtract the base address.
-        uint32_t address = table - LOAD_MEMORY_ADDRESS;
+        uint32_t address = (uint32_t) (table - LOAD_MEMORY_ADDRESS);
         PageDirectoryEntry* entry = &dir->entries[dirIndex];
         entry->frame = address >> 12;
         entry->present = 1;
@@ -79,7 +78,7 @@ void allocatePage(PageDirectory* dir, uint32_t virtualAddress) {
     PageTableEntry* tableEntry = &table->pages[tableIndex];
 
     if(!tableEntry->present) {
-        uint32_t address = firstFreePage();
+        uint32_t address = allocateNextPage();
 
         tableEntry->present = 1;
         tableEntry->frame = address;
@@ -122,7 +121,9 @@ void enablePaging() {
 
 void setPageDirectory(PageDirectory* dir) {
     uint32_t address = (uint32_t) (dir - LOAD_MEMORY_ADDRESS);
-    __asm__ volatile("mov %0, %%cr3" :: "r"(address));
+
+    printf("Address: %x\n", address);
+    setPageDirectoryLowLevel(address);
 }
 
 extern uint8_t* bitmap;
@@ -133,13 +134,15 @@ void initPaging() {
 
     pageDirectory = dumbMalloc(sizeof(PageDirectory));
 
+    memset(pageDirectory, 0, sizeof(PageDirectory));
+
+    registerInterruptHandler(14, pageFaultHandler);
+
     // Map the 4MiB from 0xC0000000 to 0xC0400000
     uint32_t end = LOAD_MEMORY_ADDRESS + 4*1024*1024;
     for(uint32_t i = LOAD_MEMORY_ADDRESS; i < end; i += PAGE_SIZE) {
         allocatePage(pageDirectory, i);
     }
-
-    registerInterruptHandler(14, pageFaultHandler);
 
     setPageDirectory(pageDirectory);
 

@@ -10,5 +10,6 @@ extern uint32_t _kernel_end;
 
 void initializePmm(uint32_t size);
 uint32_t firstFreePage();
+uint32_t allocateNextPage();
 
 #endif //OS_PMM_H

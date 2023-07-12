@@ -53,5 +53,6 @@ inline uint32_t getPageIndex(uint32_t virtualAddress) {
 }
 
 void initPaging();
+extern void setPageDirectoryLowLevel(uint32_t dir);
 
 #endif //OS_PAGING_H

@@ -40,7 +40,9 @@ char *exception_messages[32] = {
 
 void final_exception_handler(Register reg) {
     if(reg.int_no < 32) {
-        printf("EXCEPTION: %s (err code is %x)\n", exception_messages[reg.int_no], reg.err_code);
+        printf("EXCEPTION: %s (err code is %d)\n", exception_messages[reg.int_no], reg.err_code);
+        isr handler = interrupt_handlers[reg.int_no];
+        if(handler) handler(&reg);
         for(;;);
     }
     if(interrupt_handlers[reg.int_no] != 0) {
