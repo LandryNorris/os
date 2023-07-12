@@ -63,7 +63,7 @@ void allocatePage(PageDirectory* dir, uint32_t virtualAddress) {
         memset(table, 0, sizeof(PageTable));
 
         //we need to convert the address to physical. Just subtract the base address.
-        uint32_t address = (uint32_t) (table - LOAD_MEMORY_ADDRESS);
+        uint32_t address = ((uint32_t) table - LOAD_MEMORY_ADDRESS);
         PageDirectoryEntry* entry = &dir->entries[dirIndex];
         entry->frame = address >> 12;
         entry->present = 1;
@@ -120,9 +120,7 @@ void enablePaging() {
 }
 
 void setPageDirectory(PageDirectory* dir) {
-    uint32_t address = (uint32_t) (dir - LOAD_MEMORY_ADDRESS);
-
-    printf("Address: %x\n", address);
+    uint32_t address = (void*)dir - LOAD_MEMORY_ADDRESS;
     setPageDirectoryLowLevel(address);
 }
 
@@ -143,6 +141,8 @@ void initPaging() {
     for(uint32_t i = LOAD_MEMORY_ADDRESS; i < end; i += PAGE_SIZE) {
         allocatePage(pageDirectory, i);
     }
+
+    printf("Entry 768: %x\n", pageDirectory->entries[768].frame);
 
     setPageDirectory(pageDirectory);
 

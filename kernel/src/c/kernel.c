@@ -25,8 +25,6 @@ __attribute__((unused)) void kernel_main(void) {
 
     printf("Hello, World\n");
 
-    printf("Size of Page Table Entry: %d\nSize of Page table: %d\n", sizeof(PageTableEntry), sizeof(PageTable));
-
     //We don't want kernel_main to exit, so we need to loop.
     for(;;);
 }
