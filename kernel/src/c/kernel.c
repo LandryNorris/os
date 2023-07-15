@@ -7,9 +7,15 @@
 #include "interrupts.h"
 #include "paging.h"
 #include "pmm.h"
+#include "serial.h"
 
 __attribute__((unused)) void kernel_main(void) {
     terminal_initialize();
+
+    printf("Initializing COM1\n");
+    Serial com1;
+    initializeSerial(&com1, COM1_PORT);
+    serialPrint(&com1, "Printing to COM1\n");
 
     printf("Initializing Gdt/Idt\n");
     initializeGdt();

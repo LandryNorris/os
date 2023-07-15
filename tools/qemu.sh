@@ -1,3 +1,3 @@
 ./iso.sh
 
-qemu-system-i386 -cdrom ../build/os.iso
+qemu-system-i386 -cdrom ../build/os.iso -serial stdio
