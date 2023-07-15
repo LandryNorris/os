@@ -49,5 +49,4 @@ void final_exception_handler(Register reg) {
         isr handler = interrupt_handlers[reg.int_no];
         handler(&reg);
     }
-
 }
