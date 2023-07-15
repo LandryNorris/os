@@ -2,10 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "pmm.h"
-#include "../../../include/paging.h"
-#include "../../../../libk/include/system.h"
-#include "../../../include/pmm.h"
-#include "../../../include/isr.h"
+#include "paging.h"
+#include "system.h"
+#include "isr.h"
 
 void* tableAllocatorPtr;
 int isPagingEnabled = 0;
@@ -120,7 +119,7 @@ void enablePaging() {
 }
 
 void setPageDirectory(PageDirectory* dir) {
-    uint32_t address = (void*)dir - LOAD_MEMORY_ADDRESS;
+    uint32_t address = (uint32_t)((void*)dir - LOAD_MEMORY_ADDRESS);
     setPageDirectoryLowLevel(address);
 }
 
@@ -141,8 +140,6 @@ void initPaging() {
     for(uint32_t i = LOAD_MEMORY_ADDRESS; i < end; i += PAGE_SIZE) {
         allocatePage(pageDirectory, i);
     }
-
-    printf("Entry 768: %x\n", pageDirectory->entries[768].frame);
 
     setPageDirectory(pageDirectory);
 

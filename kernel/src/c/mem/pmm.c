@@ -1,13 +1,11 @@
 
-#include <stdint.h>
 #include <stdio.h>
 #include "pmm.h"
 
 /**
- * This bitmap
+ * This bitmap is used to determine which pages are currently in use.
  */
-uint8_t* bitmap = (uint8_t*) &_kernel_end;
-uint8_t* memStart;
+uint8_t* bitmap;
 uint32_t pageCount;
 uint32_t bitmapSize;
 
@@ -22,8 +20,8 @@ inline uint32_t alignToPage(uint32_t ptr) {
 }
 
 inline void setBit(uint32_t i) {
-    int index = i/PAGES_PER_BUCKET;
-    int bitIndex = i % PAGES_PER_BUCKET;
+    uint32_t index = i/PAGES_PER_BUCKET;
+    uint32_t bitIndex = i % PAGES_PER_BUCKET;
     bitmap[index] |= (1 << bitIndex);
 }
 
@@ -34,17 +32,16 @@ inline void clearBit(int i) {
 }
 
 void initializePmm(uint32_t size) {
+    bitmap = (uint8_t*) &_kernel_end;
     pageCount = size / PAGE_SIZE;
     bitmapSize = pageCount / PAGES_PER_BUCKET;
-
-    printf("Page count is %d. Bitmap size is %x. Bitmap is %x\n", pageCount, bitmapSize, bitmap);
 
     // We can speed up our writing by a factor of 4
     // by writing 32 bits at a time instead of 8.
     // Assumes bitmapSize is a multiple of 4.
     uint32_t* efficientBitmap = (uint32_t*) bitmap;
 
-    for(int i = 0; i < bitmapSize/4; i++) {
+    for(uint32_t i = 0; i < bitmapSize/4; i++) {
         efficientBitmap[i] = 0; //clear the bitmap
     }
 }

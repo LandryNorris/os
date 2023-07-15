@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "system.h"
-#include "pic.h"
 
 char keys[128] = {
         0,  27, '1', '2', '3', '4', '5', '6', '7', '8', /* 9 */
