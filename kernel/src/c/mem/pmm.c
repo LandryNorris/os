@@ -9,16 +9,6 @@ uint8_t* bitmap;
 uint32_t pageCount;
 uint32_t bitmapSize;
 
-/**
- * Align a pointer to the next 4K alignment, or return it if it is aligned
- * @param ptr
- * @return
- */
-inline uint32_t alignToPage(uint32_t ptr) {
-    if((ptr & 0x0000FFF) == 0) return ptr;
-    return (ptr & 0xFFFFF000) + 0x1000;
-}
-
 inline void setBit(uint32_t i) {
     uint32_t index = i/PAGES_PER_BUCKET;
     uint32_t bitIndex = i % PAGES_PER_BUCKET;

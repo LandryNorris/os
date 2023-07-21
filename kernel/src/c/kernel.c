@@ -8,6 +8,7 @@
 #include "paging.h"
 #include "pmm.h"
 #include "serial.h"
+#include "mem/bucket/bucket.h"
 
 __attribute__((unused)) void kernel_main(void) {
     terminal_initialize();
@@ -26,6 +27,15 @@ __attribute__((unused)) void kernel_main(void) {
 
     printf("Initializing Paging\n");
     initPaging();
+
+    kernel_heap = initializeKernelHeap(512 * 1024 * 1024);
+
+    printf("Testing allocations\n");
+
+    for(int i = 0; i < 10; i++) {
+        void* address = kmalloc(10,0, 0, "test");
+        printf("Address allocated is %x\n", address);
+    }
 
     registerInterruptHandler(0x20 + 1, handleKeyboard);
 

@@ -40,19 +40,34 @@ typedef struct {
 
 extern PageDirectory* boot_page_directory;
 
+/**
+ * @param virtualAddress
+ * @return the index of the page table in a page directory
+ */
 inline uint32_t getPageDirectoryIndex(uint32_t virtualAddress) {
     return virtualAddress >> 22;
 }
 
+/**
+ * @param virtualAddress
+ * @return the index of the page in a page table
+ */
 inline uint32_t getTableIndex(uint32_t virtualAddress) {
     return (virtualAddress >> 12) & 0x3FF;
 }
 
+/**
+ * @param virtualAddress
+ * @return number of bytes into a page
+ */
 inline uint32_t getPageIndex(uint32_t virtualAddress) {
     return virtualAddress & 0xFFF;
 }
 
 void initPaging();
 extern void setPageDirectoryLowLevel(uint32_t dir);
+
+void* mmap(void* address, size_t length);
+void* munmap(void* address, size_t length);
 
 #endif //OS_PAGING_H

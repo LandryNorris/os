@@ -6,6 +6,21 @@
 #include "system.h"
 #include "isr.h"
 
+/*
+ * Page Directory structure:
+ *
+ * Directory:
+ * [1024 page directory entries]
+ * These entries each manage 4MiB of memory space. Which
+ * 4MiB an entry manages is based on its index: the first
+ * manages the first 4MiB, the second manages the next 4MiB,
+ * and so on. Each entry contains a 4kiB-aligned pointer to
+ * a Page Table
+ *
+ * Page Table:
+ * [1024 ]
+ */
+
 void* tableAllocatorPtr;
 int isPagingEnabled = 0;
 
@@ -47,6 +62,24 @@ void* convertVirtualToPhysical(PageDirectory* dir, uint32_t virtualAddress) {
     frame = (frame << 12) + pageIndex;
 
     return (void*) frame;
+}
+
+/**
+ * Determine if the page containing a given address is allocated yet.
+ * @param dir
+ * @param virtualAddress
+ * @return
+ */
+int isPageAllocated(PageDirectory* dir, uint32_t virtualAddress) {
+    uint32_t dirIndex = getPageDirectoryIndex(virtualAddress);
+    uint32_t tableIndex = getTableIndex(virtualAddress);
+    //printf("Checking if page is allocated: %d %d\n", dirIndex, tableIndex);
+
+    PageTable* table = dir->tables[dirIndex];
+    if(!table) return 0;
+
+    PageTableEntry entry = table->pages[tableIndex];
+    return entry.present;
 }
 
 void allocatePage(PageDirectory* dir, uint32_t virtualAddress) {
@@ -121,6 +154,45 @@ void enablePaging() {
 void setPageDirectory(PageDirectory* dir) {
     uint32_t address = (uint32_t)((void*)dir - LOAD_MEMORY_ADDRESS);
     setPageDirectoryLowLevel(address);
+}
+
+/**
+ * Align a pointer to the next 4K alignment, or return it if it is aligned
+ * @param ptr
+ * @return
+ */
+inline uint32_t alignToPage(uint32_t ptr) {
+    if((ptr & 0x0000FFF) == 0) return ptr;
+    return (ptr & 0xFFFFF000) + 0x1000;
+}
+
+void* mmap(void* address, size_t length) {
+    size_t numPages = length / PAGE_SIZE;
+    uint32_t alignedAddress;
+    if(address == NULL) {
+        //find some unallocated pages after our kernel.
+        uint32_t addressToCheck = LOAD_MEMORY_ADDRESS + 4*1024*1024;
+        while(isPageAllocated(pageDirectory, addressToCheck)) {
+            addressToCheck += 4*1024;
+        }
+        alignedAddress = alignToPage(addressToCheck);
+    } else {
+        alignedAddress = alignToPage((uint32_t) address);
+    }
+    for(size_t i = 0; i < numPages; i++) {
+        uint32_t pageAddress = alignedAddress + i*PAGE_SIZE;
+        //ToDo: check if page is not already allocated
+        if(isPageAllocated(pageDirectory, pageAddress)) {
+            printf("Page %x is already allocated!\n", pageAddress);
+        }
+        allocatePage(pageDirectory, pageAddress);
+    }
+
+    return (void*) alignedAddress;
+}
+
+void* munmap(void* address, size_t length) {
+    //Todo: Implement memory unmapping
 }
 
 extern uint8_t* bitmap;
