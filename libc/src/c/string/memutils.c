@@ -5,10 +5,10 @@
 __attribute__((unused)) int memcmp(const void* p1, const void* p2, size_t size) {
     const unsigned char* a = (const unsigned char*) p1;
     const unsigned char* b = (const unsigned char*) p2;
-    for(int i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
         int diff = a[i] - b[i];
 
-        if(diff != 0) return diff;
+        if (diff != 0) return diff;
     }
     return 0;
 }
@@ -17,7 +17,7 @@ __attribute__((unused)) void* memcpy(void* __restrict p1, const void* __restrict
     unsigned char* dst = (unsigned char*) p1;
     const unsigned char* src = (const unsigned char*) p2;
 
-    for(int i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
         dst[i] = src[i];
     }
 
@@ -32,7 +32,7 @@ __attribute__((unused)) void* memmove(void* p1, const void* p2, size_t size) {
             dst[i] = src[i];
     } else {
         for (size_t i = size; i != 0; i--)
-            dst[i-1] = src[i-1];
+            dst[i - 1] = src[i - 1];
     }
     return p1;
 }

@@ -1,9 +1,9 @@
 
-char *strcpy(char *dst, const char *src) {
+char* strcpy(char* dst, const char* src) {
     char* s = src;
     char* d = dst;
 
-    for(char c = *s; c != '\0'; c = *++s) {
+    for (char c = *s; c != '\0'; c = *++s) {
         *d = c;
         d++;
     }

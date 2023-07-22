@@ -11,7 +11,7 @@
 #include "mem.h"
 
 __attribute__((unused)) void kernel_main(void) {
-    terminal_initialize();
+    initializeTerminal();
 
     printf("Initializing COM1\n");
     Serial com1;
@@ -23,7 +23,7 @@ __attribute__((unused)) void kernel_main(void) {
     initializeIdt();
 
     printf("Initializing PMM\n");
-    initializePmm(1024*1024*1024);
+    initializePmm(1024 * 1024 * 1024);
 
     printf("Initializing Paging\n");
     initPaging();
@@ -35,5 +35,5 @@ __attribute__((unused)) void kernel_main(void) {
     printf("Hello, World\n");
 
     //We don't want kernel_main to exit, so we need to loop.
-    for(;;);
+    for (;;);
 }

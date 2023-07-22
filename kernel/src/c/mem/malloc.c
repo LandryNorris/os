@@ -14,7 +14,7 @@ void initializeMalloc(size_t size) {
 }
 
 void* malloc(size_t size) {
-    if(isMallocInitialized) {
+    if (isMallocInitialized) {
         return kmalloc(size, 1, 0, "malloc'ed");
     } else {
         return dumbMalloc(size);
@@ -32,7 +32,7 @@ void testMalloc() {
     free(second);
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "DanglingPointer" //we intentionally free the memory. We're comparing pointers.
-    if(second != first) {
+    if (second != first) {
         printf("Reallocated memory does not match location\n");
     }
 #pragma clang diagnostic pop
@@ -40,7 +40,7 @@ void testMalloc() {
     void* large = malloc(100000);
     void* next = malloc(10000);
 
-    if(next - large < 100000) {
+    if (next - large < 100000) {
         printf("Allocated next memory too close to existing");
     }
 
@@ -48,11 +48,11 @@ void testMalloc() {
     free(next);
 
     void* addresses[20];
-    for(int i = 0; i < 20; i++) {
+    for (int i = 0; i < 20; i++) {
         addresses[i] = malloc(10000);
     }
 
-    for(int i = 0; i < 20; i++) {
+    for (int i = 0; i < 20; i++) {
         free(addresses[i]);
     }
 }

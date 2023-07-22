@@ -6,10 +6,10 @@
 // ISR function type
 typedef void (*isr)(Register * );
 
-extern isr interrupt_handlers[256];
+extern isr interruptHandlers[256];
 
 // Exception handler
-void final_exception_handler(Register reg);
+void finalExceptionHandler(Register reg);
 
 //irq handler
 void final_irq_handler(Register  * reg);
