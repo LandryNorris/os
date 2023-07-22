@@ -108,12 +108,6 @@ struct S_MEMORY_BUCKET {
       (p0)->next->prev = (p0); \
 }
 
-
-#define malloc(s, f, n)      kmalloc((s), 1, (f) & ~MALLOC_FLAGS_CLEAR, n)
-#define calloc(s, f, n)      kmalloc((s), 1, (f) | MALLOC_FLAGS_CLEAR, n)
-#define amalloc(s, a, f, n)  kmalloc((s), (a), (f) & ~MALLOC_FLAGS_CLEAR, n)
-#define acalloc(s, a, f, n)  kmalloc((s), (a), (f) | MALLOC_FLAGS_CLEAR, n)
-
 // local functions
 struct S_MEMORY_BUCKET *create_bucket(size_t size);
 struct S_MEMORY_PEBBLE *place_pebble(struct S_MEMORY_BUCKET *bucket, struct S_MEMORY_PEBBLE *pebble);

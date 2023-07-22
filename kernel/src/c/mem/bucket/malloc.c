@@ -58,7 +58,6 @@ struct S_MEMORY_BUCKET *create_bucket(size_t size) {
     // size must be an even number of pages
     size = (size + (PAGE_SIZE - 1)) & ~(PAGE_SIZE - 1);
 
-    printf("About to mmap %d pages\n", size / PAGE_SIZE);
     struct S_MEMORY_BUCKET *bucket = (struct S_MEMORY_BUCKET *) mmap(NULL, size / PAGE_SIZE);
     printf("mmap'ed to %x\n", bucket);
     if (bucket != NULL) {
@@ -86,7 +85,6 @@ struct S_MEMORY_BUCKET *create_bucket(size_t size) {
         first->next = NULL;
     }
 
-    printf("Created a bucket\n");
     return bucket;
 }
 
@@ -260,35 +258,35 @@ void malloc_dump(void* bucket) {
   printf("\n\n");
   i = 0;
   while (start != NULL) {
-    printf("Bucket: #%3i:  0x%'p\n", i, start);
-    printf("         Magic: 0x%08X\n", start->magic);
+    printf("Bucket: #%d:  0x%x\n", i, start);
+    printf("         Magic: 0x%x\n", start->magic);
     if (start->magic != MALLOC_MAGIC_BUCKET)
       break;
-    printf("   local flags: 0x%08X\n", start->lflags);
-    printf("  size (pages): %'i\n", start->size);
-    printf("largest pebble: %'i\n", start->largest);
-    printf("   prev bucket: %'p\n", start->prev);
-    printf("   next bucket: %'p\n", start->next);
-    printf("  first pebble: %'p\n", start->first);
+    printf("   local flags: 0x%x\n", start->lflags);
+    printf("  size (pages): %'d\n", start->size);
+    printf("largest pebble: %'d\n", start->largest);
+    printf("   prev bucket: %'x\n", start->prev);
+    printf("   next bucket: %'x\n", start->next);
+    printf("  first pebble: %'x\n", start->first);
 
     j = 0;
     prev = NULL;
     pebble = start->first;
     while (pebble) {
-      printf("Pebble: #%3i: 0x%'p\n", j, pebble);
-      printf("           Magic: 0x%08X\n", pebble->magic);
+      printf("Pebble: #%d: 0x%x\n", j, pebble);
+      printf("           Magic: 0x%x\n", pebble->magic);
       if (pebble->magic != MALLOC_MAGIC_PEBBLE)
         break;
-      printf("    source flags: 0x%08X\n", pebble->lflags);
-      printf("     local flags: 0x%08X\n", pebble->lflags);
-      printf("         padding: 0x%08X\n", pebble->padding);
-      printf("    size (bytes): %'i\n", pebble->size);
+      printf("    source flags: 0x%x\n", pebble->lflags);
+      printf("     local flags: 0x%x\n", pebble->lflags);
+      printf("         padding: 0x%x\n", pebble->padding);
+      printf("    size (bytes): %d\n", pebble->size);
 #ifdef MEM_USE_DEBUGNAME
       printf("            name: %s\n", pebble->name);
 #endif
-      printf("          parent: 0x%'p  (%s)\n", pebble->parent, (pebble->parent == start) ? "good" : "error");
-      printf("        previous: 0x%'p  (%s)\n", pebble->prev, (pebble->prev == prev) ? "good" : "error");
-      printf("            next: 0x%'p\n", pebble->next);
+      printf("          parent: 0x%x  (%s)\n", pebble->parent, (pebble->parent == start) ? "good" : "error");
+      printf("        previous: 0x%x  (%s)\n", pebble->prev, (pebble->prev == prev) ? "good" : "error");
+      printf("            next: 0x%x\n", pebble->next);
       j++;
       prev = pebble;
       pebble = pebble->next;
