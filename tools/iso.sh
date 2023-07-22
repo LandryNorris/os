@@ -1,4 +1,4 @@
-./build.sh
+./build.sh $0
 
 cd ..
 
