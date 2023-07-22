@@ -12,6 +12,7 @@ extern size_t terminal_column;
 extern uint8_t terminal_color;
 __attribute__((unused)) extern uint16_t* terminal_buffer;
 
+void terminalScroll(int numLines);
 void terminal_initialize(void);
 int terminal_putchar(char c);
 int terminal_puts(const char* data);
