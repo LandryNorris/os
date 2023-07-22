@@ -1,5 +1,3 @@
-
-#include <stdint.h>
 #include <system.h>
 
 uint8_t inportByte(uint16_t port) {

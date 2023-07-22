@@ -7,14 +7,14 @@
 extern const size_t VGA_WIDTH;
 extern const size_t VGA_HEIGHT;
 
-extern size_t terminal_row;
-extern size_t terminal_column;
-extern uint8_t terminal_color;
-__attribute__((unused)) extern uint16_t* terminal_buffer;
+extern size_t terminalRow;
+extern size_t terminalColumn;
+extern uint8_t terminalColor;
+__attribute__((unused)) extern uint16_t* terminalBuffer;
 
 void terminalScroll(int numLines);
-void terminal_initialize(void);
-int terminal_putchar(char c);
-int terminal_puts(const char* data);
+void initializeTerminal(void);
+int terminalPutChar(char c);
+int terminalPutString(const char* data);
 
 #endif //OS_TERMINAL_H

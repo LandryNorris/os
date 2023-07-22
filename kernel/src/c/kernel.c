@@ -11,7 +11,7 @@
 #include "mem.h"
 
 __attribute__((unused)) void kernel_main(void) {
-    terminal_initialize();
+    initializeTerminal();
 
     printf("Initializing COM1\n");
     Serial com1;

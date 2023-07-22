@@ -19,12 +19,11 @@ void outportShort(uint16_t port, uint16_t data);
 uint32_t inportInt(uint16_t port);
 void outportInt(uint16_t port, uint32_t data);
 
-typedef struct registers
-{
+typedef struct registers {
     uint32_t ds;
     uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
     uint32_t interruptNumber, errno;
     uint32_t eip, cs, eflags, useresp, ss;
-}Register;
+} Register;
 
 #endif //OS_SYSTEM_H
