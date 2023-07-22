@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "system.h"
+#include "terminal.h"
 
 char keys[128] = {
         0,  27, '1', '2', '3', '4', '5', '6', '7', '8', /* 9 */
@@ -54,6 +55,10 @@ void handleKeyboard(Register* r) {
         //key was released
     } else {
         //key pressed
-        printf("Pressed the %c key\n", keys[scancode]);
+        if(scancode == 72) {
+            terminalScroll(1);
+        } else {
+            printf("Pressed the %c key\n", keys[scancode]);
+        }
     }
 }
