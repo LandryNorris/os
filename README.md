@@ -64,7 +64,7 @@ server' run configuration. Set the configuration
 options as below:
 
 ```
-Target: debug
+Target: debugiso
 Executable Binary: <path to os.bin>
 Debugger: Bundled GDB (multiarch)
 Download Executable: If updated
@@ -79,7 +79,7 @@ tools within CLion will work.
 
 If breakpoints are disabled when the kernel
 is running, check that the target is set to 
-debug. If it is, and breakpoints are still
+debugiso. If it is, and breakpoints are still
 disabled, try a `make clean` first to remove
 any non-optimized builds.
 

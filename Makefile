@@ -8,11 +8,17 @@ MAKEFLAGS = all
 
 debug: MAKEFLAGS += debug
 
-.PHONY: all clean $(MODULES)
+.PHONY: all clean debug iso debugiso $(MODULES)
 
 all: $(MODULES)
 
 debug: $(MODULES)
+
+iso:
+	cd ./tools; ./iso.sh
+
+debugiso:
+	cd ./tools; ./iso.sh debug
 
 $(MODULES):
 	$(MAKE) -C $@
@@ -23,4 +29,4 @@ clean:
   		$(MAKE) -C $$module clean; \
   	done
 
-.PHONY: all clean
+.PHONY: all debug clean iso debugiso
