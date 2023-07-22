@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <mem.h>
 #include "pmm.h"
 #include "paging.h"
 #include "system.h"
@@ -90,8 +91,7 @@ void allocatePage(PageDirectory* dir, uint32_t virtualAddress) {
 
     //Allocate the table if it doesn't exist yet.
     if(!table) {
-        // ToDo: use vmm if it's initialized.
-        table = dumbMalloc(sizeof(PageTable));
+        table = malloc(sizeof(PageTable));
         memset(table, 0, sizeof(PageTable));
 
         //we need to convert the address to physical. Just subtract the base address.
@@ -201,7 +201,7 @@ extern uint32_t bitmapSize;
 void initPaging() {
     tableAllocatorPtr = bitmap + bitmapSize;
 
-    pageDirectory = dumbMalloc(sizeof(PageDirectory));
+    pageDirectory = malloc(sizeof(PageDirectory));
 
     memset(pageDirectory, 0, sizeof(PageDirectory));
 

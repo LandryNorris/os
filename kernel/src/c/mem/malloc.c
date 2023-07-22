@@ -2,6 +2,7 @@
 #include "bucket/bucket.h"
 
 void testMalloc();
+void* dumbMalloc(uint32_t size); //in page.c
 
 int isMallocInitialized = 0;
 
@@ -13,7 +14,11 @@ void initializeMalloc(size_t size) {
 }
 
 void* malloc(size_t size) {
-    return kmalloc(size, 1, 0, "malloc'ed");
+    if(isMallocInitialized) {
+        return kmalloc(size, 1, 0, "malloc'ed");
+    } else {
+        return dumbMalloc(size);
+    }
 }
 
 void free(void* ptr) {
