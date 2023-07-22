@@ -8,6 +8,7 @@
 #include "paging.h"
 #include "pmm.h"
 #include "serial.h"
+#include "mem.h"
 
 __attribute__((unused)) void kernel_main(void) {
     terminal_initialize();
@@ -26,6 +27,8 @@ __attribute__((unused)) void kernel_main(void) {
 
     printf("Initializing Paging\n");
     initPaging();
+
+    initializeMalloc(1024 * 1024 * 1024);
 
     registerInterruptHandler(0x20 + 1, handleKeyboard);
 
