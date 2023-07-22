@@ -4,9 +4,15 @@ MODULES = libk libc kernel
 # the include structure, since it can't read inner Makefiles.
 CFLAGS = -Ikernel/include -Ilibc/include -Ilibk/include -I./include
 
+MAKEFLAGS = all
+
+debug: MAKEFLAGS += debug
+
 .PHONY: all clean $(MODULES)
 
 all: $(MODULES)
+
+debug: $(MODULES)
 
 $(MODULES):
 	$(MAKE) -C $@

@@ -7,9 +7,11 @@ LINKER_PATH = src/ld/linker.ld
 MKDIR_P ?= mkdir -p
 
 INCLUDE_FLAGS = -I ./include -I../libk/include
-CFLAGS = --target=i386-pc-none-elf -ffreestanding -O2 -std=c99 -Wall -Wextra $(INCLUDE_FLAGS)
+CFLAGS = --target=i386-pc-none-elf -ffreestanding -std=c99 -Wall -Wextra $(INCLUDE_FLAGS)
 ASFLAGS = -felf32
 LDFLAGS = -nostdlib -L../libk/build -lk
+
+debug: CFLAGS += -g
 
 # Find all source files
 SRCS_C := $(shell find $(SRC_C_DIR) -name '*.c')
@@ -18,6 +20,8 @@ SRCS_C := $(shell find $(SRC_C_DIR) -name '*.c')
 OBJS_C := $(SRCS_C:$(SRC_C_DIR)/%.c=$(BUILD_DIR)/%.c.o)
 
 all: build/libc.a
+
+debug: build/libc.a
 
 build/libc.a: $(OBJS_C)
 	ar rcs $@ $^
