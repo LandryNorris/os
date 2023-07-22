@@ -26,7 +26,7 @@ IRQ 13, 45
 IRQ 14, 46
 IRQ 15, 47
 
-extern final_irq_handler
+extern finalIrqHandler
 
 temp_irq_handler:
     pusha                           ; push eax, ebx, ecx, edx, esi, edi, ebp, esp
@@ -40,7 +40,7 @@ temp_irq_handler:
     mov gs, ax
 
     push esp
-    call final_irq_handler
+    call finalIrqHandler
     pop esp
 
     pop ebx                         ; restore original data segment

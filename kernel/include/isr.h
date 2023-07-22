@@ -12,7 +12,7 @@ extern isr interruptHandlers[256];
 void finalExceptionHandler(Register reg);
 
 //irq handler
-void final_irq_handler(Register  * reg);
+void finalIrqHandler(Register  * reg);
 
 void registerInterruptHandler(int num, isr handler);
 

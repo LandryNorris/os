@@ -1,18 +1,18 @@
 #include "terminal.h"
 #include "color.h"
 
-size_t k_strlen(const char* str) {
+size_t kernel_strlen(const char* str) {
     size_t len = 0;
     while (str[len])
         len++;
     return len;
 }
 
-void terminal_setcolor(uint8_t color) {
+void terminalSetColor(uint8_t color) {
     terminalColor = color;
 }
 
-void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
+void terminalPutEntryAt(char c, uint8_t color, size_t x, size_t y) {
     const size_t index = y * VGA_WIDTH + x;
     terminalBuffer[index] = vga_entry(c, color);
 }
@@ -40,7 +40,7 @@ int terminalPutChar(char c) {
         terminalColumn = 0;
         terminalRow++;
     } else {
-        terminal_putentryat(c, terminalColor, terminalColumn, terminalRow);
+        terminalPutEntryAt(c, terminalColor, terminalColumn, terminalRow);
         if (++terminalColumn == VGA_WIDTH) {
             terminalColumn = 0;
             terminalRow++;
@@ -58,7 +58,7 @@ void terminal_write(const char* data, size_t size) {
 }
 
 int terminalPutString(const char* data) {
-    int len = (int) k_strlen(data);
+    int len = (int) kernel_strlen(data);
     terminal_write(data, len);
 
     return len;
