@@ -67,17 +67,17 @@ void setGdtEntry(int index, uint32_t base, uint32_t limit, uint8_t access, uint8
     GdtEntry * entry = &gdt[index];
 
     // Low 16 bits, middle 8 bits and high 8 bits of base
-    entry->base_low = base & 0xFFFF;
-    entry->base_mid = (base >> 16) & 0xFF;
-    entry->base_high = (base >> 24 & 0xFF);
+    entry->baseAddressLowByte = base & 0xFFFF;
+    entry->baseAddressMidByte = (base >> 16) & 0xFF;
+    entry->baseAddressHighByte = (base >> 24 & 0xFF);
 
     /*
      * The limit is set in a strange way for compatibility with the 286.
-     * We use the lower 2 bytes of limit_low and the low 4 bits of flags
+     * We use the lower 2 bytes of limitLowByte and the low 4 bits of flags
      * to store the limit. The low 4 bits of flags stores the high 4 bits
      * of limit.
      */
-    entry->limit_low = limit & 0xFFFF;
+    entry->limitLowByte = limit & 0xFFFF;
     entry->flags = (limit >> 16) & 0x0F;
 
     entry->access = access;

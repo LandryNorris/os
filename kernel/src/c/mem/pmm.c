@@ -10,13 +10,13 @@ uint32_t pageCount;
 uint32_t bitmapSize;
 
 inline void setBit(uint32_t i) {
-    uint32_t index = i/PAGES_PER_BUCKET;
+    uint32_t index = i / PAGES_PER_BUCKET;
     uint32_t bitIndex = i % PAGES_PER_BUCKET;
     bitmap[index] |= (1 << bitIndex);
 }
 
 inline void clearBit(int i) {
-    int index = i/PAGES_PER_BUCKET;
+    int index = i / PAGES_PER_BUCKET;
     int bitIndex = i % PAGES_PER_BUCKET;
     bitmap[index] &= ~(1 << bitIndex);
 }
@@ -31,7 +31,7 @@ void initializePmm(uint32_t size) {
     // Assumes bitmapSize is a multiple of 4.
     uint32_t* efficientBitmap = (uint32_t*) bitmap;
 
-    for(uint32_t i = 0; i < bitmapSize/4; i++) {
+    for (uint32_t i = 0; i < bitmapSize / 4; i++) {
         efficientBitmap[i] = 0; //clear the bitmap
     }
 }
@@ -41,8 +41,8 @@ int isSet(uint32_t i) {
 }
 
 uint32_t firstFreePage() {
-    for(uint32_t i = 0; i < pageCount; i++) {
-        if(!isSet(i)) return i;
+    for (uint32_t i = 0; i < pageCount; i++) {
+        if (!isSet(i)) return i;
     }
 
     printf("Out of free blocks\n");

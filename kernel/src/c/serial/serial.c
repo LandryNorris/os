@@ -14,7 +14,7 @@ int initializeSerial(Serial* serial, int port) {
     outportByte(port + 0, 0xAE);    // Send a byte to test the serial chip
 
     // Check if serial is faulty
-    if(inportByte(port + 0) != 0xAE) {
+    if (inportByte(port + 0) != 0xAE) {
         return 1;
     }
 
@@ -34,14 +34,14 @@ int updateLineStatusRegister(Serial* serial) {
 }
 
 int serialAvailable(Serial* serial) {
-    if(!serial->isInitialized) return 0;
+    if (!serial->isInitialized) return 0;
 
     //Read the LSB of the status register to see if data is available
     return updateLineStatusRegister(serial) & 1;
 }
 
 uint8_t serialRead(Serial* serial) {
-    while(!serialAvailable(serial));
+    while (!serialAvailable(serial));
 
     return inportByte(serial->port);
 }
@@ -57,7 +57,7 @@ void serialWrite(Serial* serial, uint8_t byte) {
 }
 
 void serialPrint(Serial* serial, const char* text) {
-    for(char c = *text; c; c = *++text) {
+    for (char c = *text; c; c = *++text) {
         serialWrite(serial, c);
     }
 }

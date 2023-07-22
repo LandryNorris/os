@@ -52,7 +52,7 @@ EXCEPTION_NO_ERROR 30
 EXCEPTION_NO_ERROR 31
 EXCEPTION_NO_ERROR 128
 
-extern final_exception_handler
+extern finalExceptionHandler
 
 temp_exception_handler:
     pusha                           ; push eax, ebx, ecx, edx, esi, edi, ebp, esp
@@ -65,7 +65,7 @@ temp_exception_handler:
     mov fs, ax
     mov gs, ax
 
-    call final_exception_handler
+    call finalExceptionHandler
 
     pop ebx                         ; restore original data segment
     mov ds, bx

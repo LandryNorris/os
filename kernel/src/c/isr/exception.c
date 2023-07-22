@@ -3,7 +3,7 @@
 #include "system.h"
 #include "isr.h"
 
-char *exception_messages[32] = {
+char* exceptionMessages[32] = {
         "Divide By Zero",
         "Debug",
         "Non Maskable Interrupt",
@@ -38,15 +38,15 @@ char *exception_messages[32] = {
         "Reserved"
 };
 
-void final_exception_handler(Register reg) {
-    if(reg.int_no < 32) {
-        printf("EXCEPTION: %s (err code is %d)\n", exception_messages[reg.int_no], reg.err_code);
-        isr handler = interrupt_handlers[reg.int_no];
-        if(handler) handler(&reg);
-        for(;;);
+void finalExceptionHandler(Register reg) {
+    if (reg.interruptNumber < 32) {
+        printf("EXCEPTION: %s (err code is %d)\n", exceptionMessages[reg.interruptNumber], reg.errno);
+        isr handler = interruptHandlers[reg.interruptNumber];
+        if (handler) handler(&reg);
+        for (;;);
     }
-    if(interrupt_handlers[reg.int_no] != 0) {
-        isr handler = interrupt_handlers[reg.int_no];
+    if (interruptHandlers[reg.interruptNumber] != 0) {
+        isr handler = interruptHandlers[reg.interruptNumber];
         handler(&reg);
     }
 }
