@@ -1,8 +1,8 @@
-./build.sh $0
+./build.sh
 
 cd ..
 
-if grub-file --is-x86-multiboot ./kernel/build/os.bin; then
+if grub-file --is-x86-multiboot2 ./kernel/build/os.bin; then
   echo multiboot confirmed
 else
   echo the file is not multiboot

@@ -1,3 +1,3 @@
 
-cd .. && make $0
+cd .. && make
 

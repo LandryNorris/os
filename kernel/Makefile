@@ -10,7 +10,8 @@ MKDIR_P ?= mkdir -p
 INCLUDE_FLAGS = -I./include -I../libc/include -I../libk/include
 CFLAGS = --target=i386-pc-none-elf -ffreestanding -O2 -std=c99 -Wall -Wextra $(INCLUDE_FLAGS)
 ASFLAGS = -felf32
-LDFLAGS = -nostdlib -L../libc/build/ -L../libk/build -lc -lk
+LDFLAGS = --target=i386-pc-none-elf -ffreestanding -nostdlib -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-3dnow -Wl,-no-pie
+LINK_FLAGS = -L../libc/build/ -L../libk/build -lc -lk
 
 debug: CFLAGS += -g
 
@@ -27,7 +28,7 @@ all: build/os.bin
 debug: build/os.bin
 
 build/os.bin: $(OBJS_C) $(OBJS_ASM)
-	clang -T $(LINKER_PATH) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+	clang $(LDFLAGS) -T $(LINKER_PATH) $^ -o $@ $(LINK_FLAGS)
 
 $(BUILD_DIR)/%.asm.o: $(SRC_ASM_DIR)/%.asm
 	$(MKDIR_P) $(dir $@)

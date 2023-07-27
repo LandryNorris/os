@@ -1,9 +1,8 @@
 ; Declare constants for the multiboot header.
-MBALIGN  equ  1 << 0            ; align loaded modules on page boundaries
-MEMINFO  equ  1 << 1            ; provide memory map
-MBFLAGS  equ  MBALIGN | MEMINFO ; this is the Multiboot 'flag' field
-MAGIC    equ  0x1BADB002        ; 'magic number' lets bootloader find the header
-CHECKSUM equ -(MAGIC + MBFLAGS)   ; checksum of above, to prove we are multiboot
+MAGIC    equ  0xE85250D6        ; 'magic number' lets bootloader find the header
+ARCHITECTURE equ 0              ; Specify i386 architecture
+LENGTH equ header_end - header  ; Length of the multiboot header
+CHECKSUM equ -(MAGIC + ARCHITECTURE + LENGTH)
 
 VMA_BASE equ 0xC0000000
 
@@ -22,11 +21,19 @@ VMA_PAGE_DIRECTORY_INDEX equ (VMA_BASE >> 22) ; VMA_BASE / 4MB = 768. This gives
 ; 32-bit boundary. The signature is in its own section so the header can be
 ; forced to be within the first 8 KiB of the kernel file.
 section .multiboot
-align 4
+header:
+align 8
 	dd MAGIC
-	dd MBFLAGS
+	dd ARCHITECTURE
+	dd LENGTH
 	dd CHECKSUM
- 
+
+	; end tag
+	dw 0
+	dw 0
+	dd 8
+header_end:
+
 ; The multiboot standard does not define the value of the stack pointer register
 ; (esp) and it is up to the kernel to provide a stack. This allocates room for a
 ; small stack by creating a symbol at the bottom of it, then allocating 16384
