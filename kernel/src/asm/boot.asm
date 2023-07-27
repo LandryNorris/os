@@ -28,6 +28,15 @@ align 8
 	dd LENGTH
 	dd CHECKSUM
 
+align 8
+    dw 5
+    dw 0
+    dd 20
+    dd 640
+    dd 680
+    dd 32
+
+align 8
 	; end tag
 	dw 0
 	dw 0
@@ -114,6 +123,11 @@ _start:
 
     ; Set up the stack.
     mov esp, stack_top
+
+    ; Push pointer to multiboot structure
+    push ebx
+    ; Push magic number
+    push eax
 
     ; Enter the high-level kernel.
     extern kernel_main
