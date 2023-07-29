@@ -9,9 +9,14 @@
 #include "pmm.h"
 #include "serial.h"
 #include "mem.h"
+#include "multiboot2.h"
 
-__attribute__((unused)) void kernel_main(void) {
+__attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
+    uint32_t address = rawAddress + LOAD_MEMORY_ADDRESS;
     initializeTerminal();
+
+    BootInfo bootInfo;
+    parseBootInfo(&bootInfo, (void*)address);
 
     printf("Initializing COM1\n");
     Serial com1;

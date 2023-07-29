@@ -115,6 +115,11 @@ _start:
     ; Set up the stack.
     mov esp, stack_top
 
+    ; Push pointer to multiboot structure
+    push ebx
+    ; Push magic number
+    push eax
+
     ; Enter the high-level kernel.
     extern kernel_main
     call kernel_main
