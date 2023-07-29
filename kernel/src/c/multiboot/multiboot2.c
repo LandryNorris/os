@@ -26,9 +26,12 @@ int parseBootInfo(BootInfo* bootInfo, void* address) {
             case 8: {
                 FramebufferInfo* framebufferInfo = (FramebufferInfo*) tagAddress;
                 bootInfo->isGraphics = 1;
-                bootInfo->framebuffer = framebufferInfo->framebuffer;
+                bootInfo->framebuffer = (void*)framebufferInfo->framebuffer;
                 bootInfo->height = framebufferInfo->height;
                 bootInfo->width = framebufferInfo->width;
+                bootInfo->bpp = framebufferInfo->bitsPerPixel;
+                bootInfo->pitch = framebufferInfo->pitch;
+                break;
             }
         }
     }

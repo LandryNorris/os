@@ -28,7 +28,7 @@ build/libc.a: $(OBJS_C)
 
 $(BUILD_DIR)/%.c.o: $(SRC_C_DIR)/%.c
 	$(MKDIR_P) $(dir $@)
-	clang $(CFLAGS) -c $< -o $@
+	clang $(CFLAGS) -g -c $< -o $@
 
 clean:
 	$(RM) -r $(BUILD_DIR)

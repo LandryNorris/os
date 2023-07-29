@@ -10,7 +10,7 @@
 #include "serial.h"
 #include "mem.h"
 #include "multiboot.h"
-
+#include "canvas.h"
 
 __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     uint32_t address = rawAddress + LOAD_MEMORY_ADDRESS;
@@ -23,6 +23,13 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
 
     BootInfo bootInfo;
     parseBootInfo(&bootInfo, (void*)address);
+
+    Canvas canvas;
+    initializeCanvas(&canvas, bootInfo.width, bootInfo.height,
+                     bootInfo.framebuffer, bootInfo.pitch,
+                     bootInfo.bpp, RGB24);
+
+    drawString(&canvas, "Hello, World!", 20, 20);
 
     printf("Initializing COM1\n");
     Serial com1;
