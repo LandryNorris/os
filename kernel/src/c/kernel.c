@@ -30,17 +30,25 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     initializeCanvas(&canvas, bootInfo.width, bootInfo.height,
                      bootInfo.pitch, bootInfo.bpp, bootInfo.framebuffer, RGB24);
 
+    serialPrint(&com1, "Initializing PMM\n");
+    initializePmm(1024 * 1024 * 1024);
+
+    serialPrint(&com1, "Initializing Paging\n");
+    initPaging();
+
+    mmapPhysical(bootInfo.framebuffer, bootInfo.pitch*bootInfo.height);
+
     RgbColor color;
     color.r = 255;
     color.g = 255;
     color.b = 255;
-    drawRect(&canvas, 20, 20, 200, 100, color);
-
-    printf("Initializing PMM\n");
-    initializePmm(1024 * 1024 * 1024);
-
-    printf("Initializing Paging\n");
-    initPaging();
+    drawRect(&canvas, 0, 0, canvas.width/2, canvas.height/2, color);
+    color.g = 0;
+    color.b = 0;
+    drawRect(&canvas, canvas.width/2, 0, canvas.width/2, canvas.height/2, color);
+    color.g = 255;
+    color.r = 0;
+    drawRect(&canvas, 0, canvas.height/2, canvas.width/2, canvas.height/2, color);
 
     initializeMalloc(1024 * 1024 * 1024);
 

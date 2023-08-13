@@ -45,6 +45,9 @@ void* dumbMalloc(uint32_t size) {
 }
 
 void* convertVirtualToPhysical(PageDirectory* dir, uint32_t virtualAddress) {
+    // if we haven't set up the page directory, we just need to subtract the load address.
+    if(!isPagingEnabled) return (void*) (virtualAddress - LOAD_MEMORY_ADDRESS);
+
     uint32_t dirIndex = getPageDirectoryIndex(virtualAddress);
     uint32_t tableIndex = getTableIndex(virtualAddress);
     uint32_t pageIndex = getPageIndex(virtualAddress);
@@ -83,6 +86,43 @@ int isPageAllocated(PageDirectory* dir, uint32_t virtualAddress) {
     return entry.present;
 }
 
+void allocatePhysicalPage(PageDirectory* dir, uint32_t virtualAddress, uint32_t physicalAddress) {
+    uint32_t dirIndex = getPageDirectoryIndex(virtualAddress);
+    uint32_t tableIndex = getTableIndex(virtualAddress);
+
+    PageTable* table = dir->tables[dirIndex];
+
+    //Allocate the table if it doesn't exist yet.
+    if (!table) {
+        table = malloc(sizeof(PageTable));
+        memset(table, 0, sizeof(PageTable));
+
+        //We need a physical address.
+        uint32_t address = (uint32_t)convertVirtualToPhysical(dir, (uint32_t)table);
+
+        PageDirectoryEntry* entry = &dir->entries[dirIndex];
+        entry->frame = address >> 12;
+        entry->present = 1;
+        entry->writable = 1;
+        entry->user = 1;
+        entry->largePage = 0;
+
+        //Save a reference for later usage.
+        dir->tables[dirIndex] = table;
+    }
+
+    PageTableEntry* tableEntry = &table->pages[tableIndex];
+
+    if (!tableEntry->present) {
+        uint32_t address = physicalAddress/PAGE_SIZE;
+
+        tableEntry->present = 1;
+        tableEntry->frame = address;
+        tableEntry->rw = 1;
+        tableEntry->user = 1;
+    }
+}
+
 void allocatePage(PageDirectory* dir, uint32_t virtualAddress) {
     uint32_t dirIndex = getPageDirectoryIndex(virtualAddress);
     uint32_t tableIndex = getTableIndex(virtualAddress);
@@ -94,8 +134,9 @@ void allocatePage(PageDirectory* dir, uint32_t virtualAddress) {
         table = malloc(sizeof(PageTable));
         memset(table, 0, sizeof(PageTable));
 
-        //we need to convert the address to physical. Just subtract the base address.
-        uint32_t address = ((uint32_t) table - LOAD_MEMORY_ADDRESS);
+        //We need a physical address.
+        uint32_t address = (uint32_t)convertVirtualToPhysical(dir, (uint32_t)table);
+
         PageDirectoryEntry* entry = &dir->entries[dirIndex];
         entry->frame = address >> 12;
         entry->present = 1;
@@ -152,7 +193,7 @@ void enablePaging() {
 }
 
 void setPageDirectory(PageDirectory* dir) {
-    uint32_t address = (uint32_t) ((void*) dir - LOAD_MEMORY_ADDRESS);
+    uint32_t address = (uint32_t) convertVirtualToPhysical(dir, (uint32_t) dir);
     setPageDirectoryLowLevel(address);
 }
 
@@ -164,6 +205,22 @@ void setPageDirectory(PageDirectory* dir) {
 inline uint32_t alignToPage(uint32_t ptr) {
     if ((ptr & 0x0000FFF) == 0) return ptr;
     return (ptr & 0xFFFFF000) + 0x1000;
+}
+
+void* mmapPhysical(void* address, size_t length) {
+    size_t numPages = length / PAGE_SIZE;
+    uint32_t alignedAddress = alignToPage((uint32_t) address);
+
+    for (size_t i = 0; i < numPages; i++) {
+        uint32_t pageAddress = alignedAddress + i * PAGE_SIZE;
+        //ToDo: check if page is not already allocated
+        if (isPageAllocated(pageDirectory, pageAddress)) {
+            printf("Page %x is already allocated!\n", pageAddress);
+        }
+        allocatePhysicalPage(pageDirectory, pageAddress, pageAddress);
+    }
+
+    return (void*) alignedAddress;
 }
 
 void* mmap(void* address, size_t length) {
