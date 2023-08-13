@@ -1,5 +1,4 @@
 
-#include <stdio.h>
 #include "multiboot2.h"
 
 void* align(const void* address) {
@@ -10,12 +9,10 @@ int parseBootInfo(BootInfo* bootInfo, void* address) {
     Multiboot2TagHeader* header = (Multiboot2TagHeader*) address;
 
     uint32_t totalSize = header->size;
-    printf("Total size is %d\n", totalSize);
 
     for(Multiboot2Tag* tagAddress = (Multiboot2Tag*)((uint8_t*)address + sizeof(Multiboot2TagHeader));
         (uint8_t*)tagAddress < (uint8_t*) address + totalSize;
         tagAddress = align((uint8_t*)tagAddress + tagAddress->size)) {
-        printf("Got type: %d\n", tagAddress->type);
 
         switch (tagAddress->type) {
             case 4: {

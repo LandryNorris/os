@@ -14,7 +14,6 @@
 
 __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     uint32_t address = rawAddress + LOAD_MEMORY_ADDRESS;
-    initializeTerminal();
 
     BootInfo bootInfo;
     parseBootInfo(&bootInfo, (void*)address);
@@ -26,10 +25,6 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     initializeSerial(&com1, COM1_PORT);
     serialPrint(&com1, "Printing to COM1\n");
 
-    Canvas canvas;
-    initializeCanvas(&canvas, bootInfo.width, bootInfo.height,
-                     bootInfo.pitch, bootInfo.bpp, bootInfo.framebuffer, RGB24);
-
     serialPrint(&com1, "Initializing PMM\n");
     initializePmm(1024 * 1024 * 1024);
 
@@ -38,19 +33,11 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
 
     mmapPhysical(bootInfo.framebuffer, bootInfo.pitch*bootInfo.height);
 
-    drawString(&canvas, "Hello, World!", 20, 20);
+    Canvas canvas;
+    initializeCanvas(&canvas, bootInfo.width, bootInfo.height,
+                     bootInfo.pitch, bootInfo.bpp, bootInfo.framebuffer, RGB24);
 
-//    RgbColor color;
-//    color.r = 255;
-//    color.g = 255;
-//    color.b = 255;
-//    drawRect(&canvas, 0, 0, canvas.width/2, canvas.height/2, color);
-//    color.g = 0;
-//    color.b = 0;
-//    drawRect(&canvas, canvas.width/2, 0, canvas.width/2, canvas.height/2, color);
-//    color.g = 255;
-//    color.r = 0;
-//    drawRect(&canvas, 0, canvas.height/2, canvas.width/2, canvas.height/2, color);
+    initializeTerminal(&canvas);
 
     initializeMalloc(1024 * 1024 * 1024);
 
