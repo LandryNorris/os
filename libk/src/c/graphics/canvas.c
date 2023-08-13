@@ -29,6 +29,8 @@ void drawRect(Canvas* canvas, int x, int y, int w, int h, RgbColor color) {
 }
 
 void drawCharacter(Canvas* canvas, char c, int x, int y) {
+    if(c < 32 || c > 127) return; //Todo: render non-printable character symbol
+
     uint32_t fontWidth = canvas->fontWidth;
     uint32_t fontHeight = canvas->fontHeight;
     PsfFont font = defaultFont; //Todo: store font in canvas
