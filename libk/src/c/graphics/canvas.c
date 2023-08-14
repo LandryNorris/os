@@ -13,8 +13,6 @@ void initializeCanvas(Canvas* canvas, uint32_t w, uint32_t h, uint32_t pitch,
     canvas->textColor.r = 255;
     canvas->textColor.g = 255;
     canvas->textColor.b = 255;
-    canvas->fontWidth = w/50;
-    canvas->fontHeight = canvas->fontWidth*2;
 }
 
 void drawRect(Canvas* canvas, int x, int y, int w, int h, RgbColor color) {
