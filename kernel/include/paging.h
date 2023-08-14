@@ -67,6 +67,7 @@ inline uint32_t getPageIndex(uint32_t virtualAddress) {
 void initPaging();
 extern void setPageDirectoryLowLevel(uint32_t dir);
 
+void* mmapPhysical(void* address, size_t length);
 void* mmap(void* address, size_t length);
 void* munmap(void* address, size_t length);
 

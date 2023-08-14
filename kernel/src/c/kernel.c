@@ -10,28 +10,34 @@
 #include "serial.h"
 #include "mem.h"
 #include "multiboot2.h"
+#include "canvas.h"
 
 __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     uint32_t address = rawAddress + LOAD_MEMORY_ADDRESS;
-    initializeTerminal();
 
     BootInfo bootInfo;
     parseBootInfo(&bootInfo, (void*)address);
 
-    printf("Initializing COM1\n");
+    initializeGdt();
+    initializeIdt();
+
     Serial com1;
     initializeSerial(&com1, COM1_PORT);
     serialPrint(&com1, "Printing to COM1\n");
 
-    printf("Initializing Gdt/Idt\n");
-    initializeGdt();
-    initializeIdt();
-
-    printf("Initializing PMM\n");
+    serialPrint(&com1, "Initializing PMM\n");
     initializePmm(1024 * 1024 * 1024);
 
-    printf("Initializing Paging\n");
+    serialPrint(&com1, "Initializing Paging\n");
     initPaging();
+
+    mmapPhysical(bootInfo.framebuffer, bootInfo.pitch*bootInfo.height);
+
+    Canvas canvas;
+    initializeCanvas(&canvas, bootInfo.width, bootInfo.height,
+                     bootInfo.pitch, bootInfo.bpp, bootInfo.framebuffer, RGB24);
+
+    initializeTerminal(&canvas);
 
     initializeMalloc(1024 * 1024 * 1024);
 

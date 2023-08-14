@@ -1,6 +1,49 @@
 #include "terminal.h"
 #include "color.h"
 
+RgbColor terminalColors[] = {
+        { //black
+            .r = 0,
+            .g = 0,
+            .b = 0
+        },
+        { //blue
+            .r = 0,
+            .g = 0,
+            .b = 255
+        },
+        { //green
+                .r = 0,
+                .g = 255,
+                .b = 0
+        },
+        { //cyan
+                .r = 0,
+                .g = 255,
+                .b = 255
+        },
+        { //red
+                .r = 255,
+                .g = 0,
+                .b = 0
+        },
+        { //magenta
+                .r = 255,
+                .g = 0,
+                .b = 255
+        },
+        { //brown
+                .r = 0x96,
+                .g = 0x4b,
+                .b = 0
+        },
+        { //light gray
+                .r = 200,
+                .g = 200,
+                .b = 200
+        }
+};
+
 size_t kernel_strlen(const char* str) {
     size_t len = 0;
     while (str[len])
@@ -13,25 +56,14 @@ void terminalSetColor(uint8_t color) {
 }
 
 void terminalPutEntryAt(char c, uint8_t color, size_t x, size_t y) {
-    const size_t index = y * VGA_WIDTH + x;
-    terminalBuffer[index] = vga_entry(c, color);
+    terminalCanvas->textColor = terminalColors[color];
+    int drawX = (int)(x * terminalCanvas->fontWidth);
+    int drawY = (int)(y * terminalCanvas->fontHeight);
+    drawCharacter(terminalCanvas, c, drawX, drawY);
 }
 
 void terminalScroll(int numLines) {
-    for (size_t i = 0; i < VGA_HEIGHT; i++) {
-        for (size_t j = 0; j < VGA_WIDTH; j++) {
-            //grab the character <numLines> below.
-            size_t indexToRead = (i + numLines) * VGA_WIDTH + j;
-            size_t indexToWrite = i * VGA_WIDTH + j;
-            uint16_t c;
-            if (i + numLines < VGA_HEIGHT) {
-                c = terminalBuffer[indexToRead];
-            } else {
-                c = vga_entry(' ', terminalColor);
-            }
-            terminalBuffer[indexToWrite] = c;
-        }
-    }
+    //Todo: scroll
     terminalRow -= numLines;
 }
 

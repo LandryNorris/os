@@ -28,6 +28,16 @@ align 8
 	dd LENGTH
 	dd CHECKSUM
 
+align 8
+    ; framebuffer
+    dw 5
+    dw 0
+    dd 20
+    dd 640
+    dd 480
+    dd 32
+
+align 8
 	; end tag
 	dw 0
 	dw 0
