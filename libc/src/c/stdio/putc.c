@@ -1,6 +1,5 @@
+#include <stdio.h>
 
-#include <terminal.h>
-
-__attribute__((unused)) int putchar(char c) {
-    return terminalPutChar(c);
+int putchar(char c) {
+    return writeChar(stdout, c);
 }

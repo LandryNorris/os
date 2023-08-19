@@ -60,7 +60,8 @@ int readByte(FileBuffer* buffer, uint8_t* result) {
 
 int writeChar(FileBuffer* buffer, char c) {
     //check if the write head has caught up with the read head.
-    if(buffer->writeHead == buffer->readHead) return 0;
+    int nextWriteIndex = (buffer->writeHead + 1) % (buffer->length);
+    if(nextWriteIndex == buffer->readHead) return 0;
 
     buffer->data[buffer->writeHead++] = c;
     if(buffer->writeHead == (buffer->length)) buffer->writeHead = 0;
