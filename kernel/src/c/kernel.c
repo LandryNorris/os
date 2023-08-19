@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <terminal.h>
+#include "terminal.h"
 #include <gdt.h>
 #include "idt.h"
 #include "system.h"

@@ -1,4 +1,4 @@
-MODULES = libk libc kernel
+MODULES = libc kernel
 
 # We don't actually need these flags. CLion needs them to understand
 # the include structure, since it can't read inner Makefiles.

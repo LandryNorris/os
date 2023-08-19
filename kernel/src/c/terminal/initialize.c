@@ -1,5 +1,5 @@
-#include <terminal.h>
-#include "color.h"
+#include "../../../include/terminal.h"
+#include "../../../include/color.h"
 
 void initializeTerminal(Canvas* canvas) {
     terminalCanvas = canvas;

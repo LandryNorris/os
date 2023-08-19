@@ -1,6 +1,6 @@
 
-#include "canvas.h"
-#include "psf.h"
+#include "../../../include/canvas.h"
+#include "../../../include/psf.h"
 
 void initializeCanvas(Canvas* canvas, uint32_t w, uint32_t h, uint32_t pitch,
                       uint32_t bpp, uint8_t* buffer, ColorSpace colorSpace) {

@@ -11,7 +11,7 @@ INCLUDE_FLAGS = -I./include -I../libc/include -I../libk/include
 CFLAGS = --target=i386-pc-none-elf -ffreestanding -O2 -std=c99 -Wall -Wextra $(INCLUDE_FLAGS)
 ASFLAGS = -felf32
 LDFLAGS = --target=i386-pc-none-elf -ffreestanding -nostdlib -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-3dnow -Wl,-no-pie
-LINK_FLAGS = -L../libc/build/ -L../libk/build -lc -lk
+LINK_FLAGS = -L../libc/build/ -lc
 
 debug: CFLAGS += -g
 

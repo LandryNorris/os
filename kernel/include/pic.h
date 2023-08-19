@@ -5,7 +5,7 @@
 #ifndef OS_PIC_H
 #define OS_PIC_H
 
-#include <system.h>
+#include "system.h"
 #include <stdint.h>
 
 #define PIC1		0x20		/* IO base address for master PIC */

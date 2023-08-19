@@ -1,5 +1,5 @@
 #include <stddef.h>
-#include "canvas.h"
+#include "../../../include/canvas.h"
 
 const size_t VGA_WIDTH = 80;
 const size_t VGA_HEIGHT = 40;

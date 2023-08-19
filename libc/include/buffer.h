@@ -1,5 +1,5 @@
-#ifndef OS_LIBK_BUFFER_H
-#define OS_LIBK_BUFFER_H
+#ifndef OS_BUFFER_H
+#define OS_BUFFER_H
 
 #include <stdint.h>
 
@@ -10,7 +10,6 @@ typedef struct {
     int length;
     uint8_t data[];
 } FileBuffer;
-
 
 /**
  * Determine how many  bytes are available for reading
@@ -48,4 +47,4 @@ int readByte(FileBuffer* buffer, uint8_t* result);
 int writeChar(FileBuffer* buffer, char c);
 int readChar(FileBuffer* buffer, char* result);
 
-#endif //OS_LIBK_BUFFER_H
+#endif //OS_BUFFER_H
