@@ -10,7 +10,7 @@
 #include "serial.h"
 #include "mem.h"
 #include "multiboot2.h"
-#include "canvas.h"
+#include "buffer.h"
 
 __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     uint32_t address = rawAddress + LOAD_MEMORY_ADDRESS;
@@ -42,6 +42,21 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     initializeMalloc(1024 * 1024 * 1024);
 
     registerInterruptHandler(0x20 + 1, handleKeyboard);
+
+    FileBuffer* buffer = allocFileBuffer(35);
+
+    for(int j = 0; j < 28; j++) {
+        for(int i = 0; i < 29; i++) {
+            writeByte(buffer, i);
+        }
+
+        for(int i = 0; i < 29; i++) {
+            uint8_t value;
+            readByte(buffer, &value);
+            printf("%d ", value);
+        }
+        printf("\n");
+    }
 
     printf("Hello, World\n");
 
