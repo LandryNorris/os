@@ -39,6 +39,11 @@ void drawCharacter(Canvas* canvas, char c, int x, int y) {
             uint32_t fontX = drawX*8/fontWidth;
             uint32_t fontY = drawY*16/fontHeight;
 
+            if((drawX + x) >= canvas->width || (drawY + y) >= canvas->height) {
+                //don't draw out of bounds
+                continue;
+            }
+
             uint8_t isColored = character.bitmap[fontY] & (1 << (7-fontX));
             if(isColored) {
                 int index = 4*(drawX + x) + (drawY + y)*canvas->pitch;

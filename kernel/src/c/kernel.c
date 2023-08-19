@@ -10,7 +10,8 @@
 #include "serial.h"
 #include "mem.h"
 #include "multiboot2.h"
-#include "canvas.h"
+#include "buffer.h"
+#include "privatestdbuf.h"
 
 __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     uint32_t address = rawAddress + LOAD_MEMORY_ADDRESS;
@@ -41,10 +42,24 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
 
     initializeMalloc(1024 * 1024 * 1024);
 
+    FileBuffer* in = allocFileBuffer(4096);
+    FileBuffer* out = allocFileBuffer(4096);
+
+    initializeBuffers(in, out);
+
     registerInterruptHandler(0x20 + 1, handleKeyboard);
 
     printf("Hello, World\n");
 
     //We don't want kernel_main to exit, so we need to loop.
-    for (;;);
+    for (;;) {
+        if(bufferAvailable(out)) {
+            char c;
+            int result = readChar(out, &c);
+
+            if(result) {
+                terminalPutChar(c);
+            }
+        }
+    }
 }

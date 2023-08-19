@@ -79,7 +79,7 @@ int terminalPutChar(char c) {
         }
     }
     if (terminalRow >= VGA_HEIGHT) {
-        terminalScroll(1);
+        //terminalScroll(1);
     }
     return c;
 }

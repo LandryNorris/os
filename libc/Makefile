@@ -7,7 +7,7 @@ LINKER_PATH = src/ld/linker.ld
 MKDIR_P ?= mkdir -p
 
 INCLUDE_FLAGS = -I ./include -I../libk/include
-CFLAGS = --target=i386-pc-none-elf -ffreestanding -std=c99 -Wall -Wextra $(INCLUDE_FLAGS)
+CFLAGS = --target=i386-pc-none-elf -ffreestanding -std=c99 -Wall -Wextra $(INCLUDE_FLAGS) -g
 ASFLAGS = -felf32
 LDFLAGS = -nostdlib -L../libk/build -lk
 

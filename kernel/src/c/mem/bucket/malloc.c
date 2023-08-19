@@ -59,7 +59,6 @@ struct S_MEMORY_BUCKET *create_bucket(size_t size) {
     size = (size + (PAGE_SIZE - 1)) & ~(PAGE_SIZE - 1);
 
     struct S_MEMORY_BUCKET *bucket = (struct S_MEMORY_BUCKET *) mmap(NULL, size / PAGE_SIZE);
-    printf("mmap'ed to %x\n", bucket);
     if (bucket != NULL) {
         bucket->magic = MALLOC_MAGIC_BUCKET;
         bucket->lflags = BUCKET_FLAG_FIRST;

@@ -1,6 +1,5 @@
 #include <stdarg.h>
 #include <stdio.h>
-#include <stdint.h>
 
 void printInt(long num) {
     // Handle negative numbers
