@@ -1,5 +1,4 @@
-#include "mem.h"
-#include "buffer.h"
+#include <buffer.h>
 
 /*
  * Buffer design:
@@ -11,17 +10,6 @@
  * one spot before the read pointer, we are full. If the read pointer is
  * at the same spot as the write pointer, we are empty.
  */
-
-FileBuffer* allocFileBuffer(int size) {
-    // we need to allocate an extra byte, so we can distinguish
-    // empty (read == write) vs full (write+1 == read)
-    FileBuffer* buffer = malloc(sizeof(FileBuffer) + size+1);
-    buffer->readHead = 0;
-    buffer->writeHead = 0;
-    buffer->length = size+1;
-
-    return buffer;
-}
 
 int bufferAvailable(FileBuffer* buffer) {
     if(buffer->writeHead >= buffer->readHead) {
