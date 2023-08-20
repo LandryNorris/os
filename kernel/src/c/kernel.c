@@ -12,6 +12,7 @@
 #include "multiboot2.h"
 #include "privatestdbuf.h"
 #include "createbuffer.h"
+#include "pci.h"
 
 __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     uint32_t address = rawAddress + LOAD_MEMORY_ADDRESS;
@@ -48,6 +49,8 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     initializeBuffers(in, out);
 
     registerInterruptHandler(0x20 + 1, handleKeyboard);
+
+    pciScan();
 
     printf("Hello, World\n");
 
