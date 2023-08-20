@@ -10,8 +10,8 @@
 #include "serial.h"
 #include "mem.h"
 #include "multiboot2.h"
-#include "buffer.h"
 #include "privatestdbuf.h"
+#include "createbuffer.h"
 
 __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     uint32_t address = rawAddress + LOAD_MEMORY_ADDRESS;

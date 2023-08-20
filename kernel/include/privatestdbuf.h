@@ -1,7 +1,7 @@
 #ifndef OS_PRIVATESTDBUF_H
 #define OS_PRIVATESTDBUF_H
 
-#include "buffer.h"
+#include <buffer.h>
 
 void initializeBuffers(FileBuffer* in, FileBuffer* out);
 

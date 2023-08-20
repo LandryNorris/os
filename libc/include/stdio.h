@@ -2,7 +2,7 @@
 #ifndef OS_STDIO_H
 #define OS_STDIO_H
 
-#include "buffer.h"
+#include <buffer.h>
 
 extern FileBuffer* stdin;
 extern FileBuffer* stdout;
