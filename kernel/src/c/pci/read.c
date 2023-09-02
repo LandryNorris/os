@@ -11,28 +11,28 @@ uint16_t pciReadWord(uint8_t bus, uint8_t device, uint8_t function, uint8_t offs
     return (result >> ((offset & 2)*8)) & 0xFFFF;
 }
 
-uint16_t pciReadVendor(uint8_t bus, uint8_t device) {
-    return pciReadWord(bus, device, 0, 0);
+uint16_t pciReadVendor(uint8_t bus, uint8_t device, uint8_t function) {
+    return pciReadWord(bus, device, function, 0);
 }
 
-uint16_t pciReadDevice(uint8_t bus, uint8_t device) {
-    return pciReadWord(bus, device, 0, 2);
+uint16_t pciReadDevice(uint8_t bus, uint8_t device, uint8_t function) {
+    return pciReadWord(bus, device, function, 2);
 }
 
-uint8_t pciReadClassCode(uint8_t bus, uint8_t device) {
-    uint16_t word = pciReadWord(bus, device, 0, 0xA);
+uint8_t pciReadClassCode(uint8_t bus, uint8_t device, uint8_t function) {
+    uint16_t word = pciReadWord(bus, device, function, 0xA);
     return word >> 8;
 }
 
-uint8_t pciReadSubClassCode(uint8_t bus, uint8_t device) {
-    return pciReadWord(bus, device, 0, 0xA) & 0xFF;
+uint8_t pciReadSubClassCode(uint8_t bus, uint8_t device, uint8_t function) {
+    return pciReadWord(bus, device, function, 0xA) & 0xFF;
 }
 
-uint8_t pciReadProgrammingInterface(uint8_t bus, uint8_t device) {
-    uint16_t word = pciReadWord(bus, device, 0, 0x8);
+uint8_t pciReadProgrammingInterface(uint8_t bus, uint8_t device, uint8_t function) {
+    uint16_t word = pciReadWord(bus, device, function, 0x8);
     return word >> 8;
 }
 
-uint8_t pciReadHeaderType(uint8_t bus, uint8_t device) {
-    return pciReadWord(bus, device, 0, 0xE) & 0xFF;
+uint8_t pciReadHeaderType(uint8_t bus, uint8_t device, uint8_t function) {
+    return pciReadWord(bus, device, function, 0xE) & 0xFF;
 }

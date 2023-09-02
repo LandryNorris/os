@@ -19,18 +19,18 @@ typedef struct {
 } PciDevice;
 
 typedef struct {
-    PciDevice* devices[256][32];
+    PciDevice* devices[256][32][8];
 } PciBus;
 
 void pciScan(PciBus* pciBus);
 
-uint16_t pciReadVendor(uint8_t bus, uint8_t device);
-uint16_t pciReadDevice(uint8_t bus, uint8_t device);
+uint16_t pciReadVendor(uint8_t bus, uint8_t device, uint8_t function);
+uint16_t pciReadDevice(uint8_t bus, uint8_t device, uint8_t function);
 uint16_t pciReadWord(uint8_t bus, uint8_t device, uint8_t function, uint8_t offset);
 
-uint8_t pciReadClassCode(uint8_t bus, uint8_t device);
-uint8_t pciReadSubClassCode(uint8_t bus, uint8_t device);
-uint8_t pciReadProgrammingInterface(uint8_t bus, uint8_t device);
-uint8_t pciReadHeaderType(uint8_t bus, uint8_t device);
+uint8_t pciReadClassCode(uint8_t bus, uint8_t device, uint8_t function);
+uint8_t pciReadSubClassCode(uint8_t bus, uint8_t device, uint8_t function);
+uint8_t pciReadProgrammingInterface(uint8_t bus, uint8_t device, uint8_t function);
+uint8_t pciReadHeaderType(uint8_t bus, uint8_t device, uint8_t function);
 
 #endif //OS_PCI_H
