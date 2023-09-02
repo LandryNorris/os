@@ -23,6 +23,10 @@ uint8_t pciReadClassCode(uint8_t bus, uint8_t device) {
     return pciReadWord(bus, device, 0, 0xB);
 }
 
+uint8_t pciReadSubClassCode(uint8_t bus, uint8_t device) {
+    return pciReadWord(bus, device, 0, 0xA);
+}
+
 uint8_t pciReadHeaderType(uint8_t bus, uint8_t device) {
     return pciReadWord(bus, device, 0, 0xE);
 }

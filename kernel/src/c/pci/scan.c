@@ -17,13 +17,15 @@ void pciScan(PciBus* pciBus) {
                 pciDevice->deviceId = deviceId;
                 pciDevice->vendorId = vendor;
                 pciDevice->classCode = pciReadClassCode(bus, device);
+                pciDevice->subClass = pciReadSubClassCode(bus, device);
                 pciDevice->multiFunction = headerType != 0;
                 pciDevice->headerType = headerType & 0x7F;
 
                 pciBus->devices[bus][device] = pciDevice;
 
-                printf("Found PCI device %x:%x %d/%d (%d) (%d)\n", bus, device,
-                       vendor, deviceId, pciDevice->classCode, pciDevice->headerType);
+                printf("Found PCI device %x:%x %d/%d (%d:%d) (%d)\n", bus, device,
+                       vendor, deviceId, pciDevice->classCode, pciDevice->subClass,
+                       pciDevice->headerType);
             }
         }
     }
