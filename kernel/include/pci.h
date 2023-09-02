@@ -12,6 +12,7 @@ typedef struct {
     uint16_t deviceId;
     uint16_t vendorId;
     uint8_t classCode;
+    uint8_t programmingInterface;
     uint8_t subClass;
     uint8_t headerType;
     uint8_t multiFunction;
@@ -29,6 +30,7 @@ uint16_t pciReadWord(uint8_t bus, uint8_t device, uint8_t function, uint8_t offs
 
 uint8_t pciReadClassCode(uint8_t bus, uint8_t device);
 uint8_t pciReadSubClassCode(uint8_t bus, uint8_t device);
+uint8_t pciReadProgrammingInterface(uint8_t bus, uint8_t device);
 uint8_t pciReadHeaderType(uint8_t bus, uint8_t device);
 
 #endif //OS_PCI_H
