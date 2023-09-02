@@ -18,3 +18,11 @@ uint16_t pciReadVendor(uint8_t bus, uint8_t device) {
 uint16_t pciReadDevice(uint8_t bus, uint8_t device) {
     return pciReadWord(bus, device, 0, 2);
 }
+
+uint8_t pciReadClassCode(uint8_t bus, uint8_t device) {
+    return pciReadWord(bus, device, 0, 0xB);
+}
+
+uint8_t pciReadHeaderType(uint8_t bus, uint8_t device) {
+    return pciReadWord(bus, device, 0, 0xE);
+}

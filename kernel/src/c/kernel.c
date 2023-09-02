@@ -50,7 +50,9 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
 
     registerInterruptHandler(0x20 + 1, handleKeyboard);
 
-    pciScan();
+    PciBus* pciBus = malloc(sizeof(PciBus));
+
+    pciScan(pciBus);
 
     printf("Hello, World\n");
 
