@@ -16,13 +16,17 @@ typedef struct {
     uint8_t subClass;
     uint8_t headerType;
     uint8_t multiFunction;
+    uint8_t bus;
+    uint8_t device;
+    uint8_t function;
 } PciDevice;
 
 typedef struct {
-    PciDevice* devices[256][32][8];
+    PciDevice* devices[20];
 } PciBus;
 
 void pciScan(PciBus* pciBus);
+PciDevice* scanForDeviceClass(PciBus* pciBus, uint8_t class, uint8_t subclass);
 
 uint16_t pciReadVendor(uint8_t bus, uint8_t device, uint8_t function);
 uint16_t pciReadDevice(uint8_t bus, uint8_t device, uint8_t function);

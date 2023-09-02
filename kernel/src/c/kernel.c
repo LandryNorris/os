@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <terminal.h>
 #include <gdt.h>
+#include <string.h>
 #include "idt.h"
 #include "system.h"
 #include "isr.h"
