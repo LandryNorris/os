@@ -4,6 +4,10 @@
 #define PCI_CONFIG_ADDRESS 0xCF8
 #define PCI_CONFIG_DATA 0xCFC
 
+#define HEADER_TYPE_GENERAL 0
+#define HEADER_TYPE_PCI_BRIDGE 1
+#define HEADER_TYPE_PCI_CARDBUS_BRIDGE 2
+
 typedef struct {
     uint16_t deviceId;
     uint16_t vendorId;
