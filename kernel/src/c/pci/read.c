@@ -20,17 +20,19 @@ uint16_t pciReadDevice(uint8_t bus, uint8_t device) {
 }
 
 uint8_t pciReadClassCode(uint8_t bus, uint8_t device) {
-    return pciReadWord(bus, device, 0, 0xB);
+    uint16_t word = pciReadWord(bus, device, 0, 0xA);
+    return word >> 8;
 }
 
 uint8_t pciReadSubClassCode(uint8_t bus, uint8_t device) {
-    return pciReadWord(bus, device, 0, 0xA);
+    return pciReadWord(bus, device, 0, 0xA) & 0xFF;
 }
 
 uint8_t pciReadProgrammingInterface(uint8_t bus, uint8_t device) {
-    return pciReadWord(bus, device, 0, 0x9);
+    uint16_t word = pciReadWord(bus, device, 0, 0x8);
+    return word >> 8;
 }
 
 uint8_t pciReadHeaderType(uint8_t bus, uint8_t device) {
-    return pciReadWord(bus, device, 0, 0xE);
+    return pciReadWord(bus, device, 0, 0xE) & 0xFF;
 }
