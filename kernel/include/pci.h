@@ -9,6 +9,7 @@ typedef struct {
     uint16_t vendorId;
     uint8_t classCode;
     uint8_t headerType;
+    uint8_t multiFunction;
 } PciDevice;
 
 typedef struct {
