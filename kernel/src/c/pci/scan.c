@@ -25,5 +25,5 @@ void pciScan(PciBus* pciBus) {
             }
         }
     }
-    printf("Done scanning PCI pciBus\n");
+    printf("Done scanning PCI bus\n");
 }
