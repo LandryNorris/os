@@ -73,7 +73,7 @@ GDB server: qemu-system-i386
 GDB server args: -s -S -cdrom <path to iso>
 ```
 
-Click the 'Debug' button in the IDE to
+Click the 'Debug' button in the Ide to
 start QEMU. Breakpoints and other debugging
 tools within CLion will work.
 

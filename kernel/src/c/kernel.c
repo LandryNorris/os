@@ -14,6 +14,7 @@
 #include "privatestdbuf.h"
 #include "createbuffer.h"
 #include "pci.h"
+#include "ide.h"
 
 __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     uint32_t address = rawAddress + LOAD_MEMORY_ADDRESS;
@@ -54,6 +55,15 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     PciBus* pciBus = malloc(sizeof(PciBus));
 
     pciScan(pciBus);
+
+    initializeIdeCompatibility();
+
+    for(int i = 0; i < 4; i++) {
+        IdeDevice* device = &ide.devices[i];
+        if(!device->exists) continue;
+        printf("Found drive %s with size %d GB\n", device->model,
+               device->size/1024/1024/2);
+    }
 
     printf("Hello, World\n");
 
