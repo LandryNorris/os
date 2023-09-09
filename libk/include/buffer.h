@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-// must be kept up to date with kernel's buffer.h
+// must be kept up to date with kernel's ideBuffer.h
 typedef struct {
     int readHead;
     int writeHead;
@@ -24,7 +24,7 @@ int bufferAvailable(FileBuffer* buffer);
 int bufferRemaining(FileBuffer* buffer);
 
 /**
- * Write a byte to the buffer
+ * Write a byte to the ideBuffer
  * @param buffer
  * @param byte
  * @return whether the data was successfully written
@@ -32,7 +32,7 @@ int bufferRemaining(FileBuffer* buffer);
 int writeByte(FileBuffer* buffer, uint8_t byte);
 
 /**
- * Read a byte from the buffer
+ * Read a byte from the ideBuffer
  * @param buffer
  * @param result the byte read
  * @return
@@ -40,7 +40,7 @@ int writeByte(FileBuffer* buffer, uint8_t byte);
 int readByte(FileBuffer* buffer, uint8_t* result);
 
 /**
- * Write a character to the buffer
+ * Write a character to the ideBuffer
  * @param buffer
  * @param c
  * @return whether the character was successfully written

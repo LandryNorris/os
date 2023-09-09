@@ -38,5 +38,6 @@ uint8_t pciReadByte(uint8_t bus, uint8_t device, uint8_t function, uint8_t offse
 uint8_t pciReadSubClassCode(uint8_t bus, uint8_t device, uint8_t function);
 uint8_t pciReadProgrammingInterface(uint8_t bus, uint8_t device, uint8_t function);
 uint8_t pciReadHeaderType(uint8_t bus, uint8_t device, uint8_t function);
+uint32_t pciReadBar(uint8_t bus, uint8_t device, uint8_t function, uint8_t bar);
 
 #endif //OS_PCI_H

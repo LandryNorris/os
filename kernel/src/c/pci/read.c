@@ -1,7 +1,7 @@
 #include <system.h>
 #include "pci.h"
 
-uint16_t pciReadDword(uint8_t bus, uint8_t device, uint8_t function, uint8_t offset) {
+uint32_t pciReadDword(uint8_t bus, uint8_t device, uint8_t function, uint8_t offset) {
     uint32_t id = (bus << 16) | (device << 11) | (function << 8);
     uint32_t address = id | (0x80000000) | (offset & 0xFC);
 
@@ -41,4 +41,10 @@ uint8_t pciReadProgrammingInterface(uint8_t bus, uint8_t device, uint8_t functio
 
 uint8_t pciReadHeaderType(uint8_t bus, uint8_t device, uint8_t function) {
     return pciReadByte(bus, device, function, 0xE);
+}
+
+uint32_t pciReadBar(uint8_t bus, uint8_t device, uint8_t function, uint8_t bar) {
+    //Todo: handle different header types
+    int index = 0x10 + bar*4;
+    return pciReadDword(bus, device, function, index);
 }
