@@ -30,9 +30,11 @@ PciDevice* scanForDeviceClass(PciBus* pciBus, uint8_t class, uint8_t subclass);
 
 uint16_t pciReadVendor(uint8_t bus, uint8_t device, uint8_t function);
 uint16_t pciReadDevice(uint8_t bus, uint8_t device, uint8_t function);
+uint32_t pciReadDword(uint8_t bus, uint8_t device, uint8_t function, uint8_t offset);
 uint16_t pciReadWord(uint8_t bus, uint8_t device, uint8_t function, uint8_t offset);
+uint8_t pciReadByte(uint8_t bus, uint8_t device, uint8_t function, uint8_t offset);
 
-uint8_t pciReadClassCode(uint8_t bus, uint8_t device, uint8_t function);
+        uint8_t pciReadClassCode(uint8_t bus, uint8_t device, uint8_t function);
 uint8_t pciReadSubClassCode(uint8_t bus, uint8_t device, uint8_t function);
 uint8_t pciReadProgrammingInterface(uint8_t bus, uint8_t device, uint8_t function);
 uint8_t pciReadHeaderType(uint8_t bus, uint8_t device, uint8_t function);
