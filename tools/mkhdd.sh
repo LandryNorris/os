@@ -1,1 +1,2 @@
-qemu-img create hdd/disk.img 4G
+mkdir ../hdd
+qemu-img create ../hdd/disk.img 4G
