@@ -5,7 +5,7 @@
 #include <buffer.h>
 
 /**
- * Allocate a file ideBuffer
+ * Allocate a file buffer
  * @param size size of the ideBuffer to allocate
  */
 FileBuffer* allocFileBuffer(int size);
