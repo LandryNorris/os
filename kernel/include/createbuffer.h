@@ -6,7 +6,7 @@
 
 /**
  * Allocate a file buffer
- * @param size size of the ideBuffer to allocate
+ * @param size size of the buffer to allocate
  */
 FileBuffer* allocFileBuffer(int size);
 
