@@ -11,5 +11,6 @@ size_t strlen(const char*);
 char* strcat(char*, char*);
 char* strchr(const char*, int);
 char* strcpy(char*, const char*);
+int strcmp(const char* str1, const char* str2);
 
 #endif //OS_STRING_H
