@@ -41,11 +41,6 @@ void initializeDrive(int channel, int isSecondary) {
     ataSelect(channel, isSecondary);
     ataIoWait(channel);
 
-    ideWrite(channel, ATA_REG_SECCOUNT0, 0);
-    ideWrite(channel, ATA_REG_LBA0, 0);
-    ideWrite(channel, ATA_REG_LBA1, 0);
-    ideWrite(channel, ATA_REG_LBA2, 0);
-
     ideWrite(channel, ATA_REG_COMMAND, ATA_CMD_IDENTIFY);
     ataIoWait(channel);
 

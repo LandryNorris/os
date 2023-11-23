@@ -65,6 +65,9 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
                device->size/1024/1024/2);
     }
 
+    uint8_t data[1024];
+    ataReadSectors(&ide.devices[0], 2, data, 1024);
+
     printf("Hello, World\n");
 
     //We don't want kernel_main to exit, so we need to loop.
