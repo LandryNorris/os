@@ -41,11 +41,6 @@ void initializeDrive(int channel, int isSecondary) {
     ataSelect(channel, isSecondary);
     ataIoWait(channel);
 
-    ideWrite(channel, ATA_REG_SECCOUNT0, 0);
-    ideWrite(channel, ATA_REG_LBA0, 0);
-    ideWrite(channel, ATA_REG_LBA1, 0);
-    ideWrite(channel, ATA_REG_LBA2, 0);
-
     ideWrite(channel, ATA_REG_COMMAND, ATA_CMD_IDENTIFY);
     ataIoWait(channel);
 
@@ -85,7 +80,7 @@ void initializeDrive(int channel, int isSecondary) {
     IdeDevice* device = &ide.devices[index];
 
     device->exists = 1;
-    device->type = IDE_ATA;
+    device->type = type;
     device->channel = channel;
     device->drive = isSecondary;
     device->signature = *(uint16_t*)(ideBuffer + ATA_IDENT_DEVICE_TYPE);
