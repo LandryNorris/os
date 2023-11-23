@@ -85,7 +85,7 @@ void initializeDrive(int channel, int isSecondary) {
     IdeDevice* device = &ide.devices[index];
 
     device->exists = 1;
-    device->type = IDE_ATA;
+    device->type = type;
     device->channel = channel;
     device->drive = isSecondary;
     device->signature = *(uint16_t*)(ideBuffer + ATA_IDENT_DEVICE_TYPE);
