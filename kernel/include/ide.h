@@ -113,5 +113,27 @@ uint8_t ideRead(uint8_t channel, uint8_t reg);
 uint8_t ideReadControl(uint8_t channel, uint8_t reg);
 void ideWrite(uint8_t channel, uint8_t reg, uint8_t value);
 void ideWriteControl(uint8_t channel, uint8_t reg, uint8_t value);
+int ataWaitUntilReady(int channel);
+void ataIoWait(int channel);
+
+/**
+ * Read data from an ATA device.
+ *
+ * @param device
+ * @param blockAddress the LBA to read from. Each LBA addresses 512 bytes
+ * @param buffer the buffer to write data to
+ * @param length the number of bytes to read
+ */
+void ataReadSectors(IdeDevice* device, uint32_t blockAddress, uint8_t* buffer, int length);
+
+/**
+ * Write data to an ATA drive
+ *
+ * @param device
+ * @param blockAddress the LBA to write to. Each LBA addresses 512 bytes
+ * @param buffer the buffer to write from
+ * @param length the number of bytes to write
+ */
+void ataWriteSectors(IdeDevice* device, uint32_t blockAddress, uint8_t* buffer, int length);
 
 #endif //OS_IDE_H
