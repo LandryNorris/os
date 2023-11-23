@@ -24,7 +24,6 @@ void ataReadSectors(IdeDevice* device, uint32_t blockAddress, uint8_t* buffer, i
     ataWaitUntilReady(device->channel);
 
     uint32_t head = (blockAddress & 0x0f000000) >> 24;
-
     uint32_t devSel = 0xE0 | (device->drive << 4) | head;
 
     ideWrite(device->channel, ATA_REG_HDDEVSEL, devSel);
