@@ -35,4 +35,6 @@ typedef enum {
     Panic
 } Ext2ErrorBehavior;
 
+int readSuperblock(IdeDevice* device, SuperBlock* superBlock);
+
 #endif //OS_EXT2_H

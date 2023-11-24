@@ -15,6 +15,7 @@
 #include "createbuffer.h"
 #include "pci.h"
 #include "ide.h"
+#include "ext2.h"
 
 __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     uint32_t address = rawAddress + LOAD_MEMORY_ADDRESS;
@@ -65,8 +66,8 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
                device->size/1024/1024/2);
     }
 
-    uint8_t data[1024];
-    ataReadSectors(&ide.devices[0], 2, data, 1024);
+    SuperBlock superBlock;
+    readSuperblock(&ide.devices[0], &superBlock);
 
     printf("Hello, World\n");
 
