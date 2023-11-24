@@ -35,6 +35,39 @@ typedef enum {
     Panic
 } Ext2ErrorBehavior;
 
-int readSuperblock(IdeDevice* device, SuperBlock* superBlock);
+typedef struct {
+    uint32_t blockUsageBitmapAddress;
+    uint32_t inodeUsageBitmapAddress;
+    uint32_t inodeTableAddress;
+    uint16_t numUnallocatedBlocks;
+    uint16_t numUnallocatedInodes;
+    uint16_t numDirectories;
+} Ext2BlockDescriptor;
+
+typedef struct {
+    uint8_t type;
+    uint8_t permissions;
+    uint64_t size;
+    uint32_t directPointer1;
+    uint32_t directPointer2;
+    uint32_t directPointer3;
+    uint32_t directPointer4;
+    uint32_t directPointer5;
+    uint32_t directPointer6;
+    uint32_t directPointer7;
+    uint32_t directPointer8;
+    uint32_t directPointer9;
+    uint32_t directPointer10;
+    uint32_t directPointer11;
+} Ext2Inode;
+
+typedef struct {
+    SuperBlock superBlock;
+    uint32_t numGroups;
+    Ext2BlockDescriptor* blockDescriptors;
+} Ext2Fs;
+
+int readSuperblock(IdeDevice* device, Ext2Fs* fs);
+void readBlockGroupDescriptor(IdeDevice* device, Ext2Fs* fs);
 
 #endif //OS_EXT2_H

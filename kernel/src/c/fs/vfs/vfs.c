@@ -1,5 +1,5 @@
 #include <string.h>
-#include <malloc.h>
+#include <mem.h>
 #include "vfs.h"
 
 #define DEFAULT_NUM_CHILDREN 10

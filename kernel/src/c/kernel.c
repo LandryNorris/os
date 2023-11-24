@@ -66,8 +66,17 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
                device->size/1024/1024/2);
     }
 
-    SuperBlock superBlock;
-    readSuperblock(&ide.devices[0], &superBlock);
+    Ext2Fs ext2Fs;
+    readSuperblock(&ide.devices[0], &ext2Fs);
+    readBlockGroupDescriptor(&ide.devices[0], &ext2Fs);
+
+    printf("Found %d groups\n", ext2Fs.numGroups);
+
+    for(uint32_t i = 0; i < ext2Fs.numGroups; i++) {
+        if(ext2Fs.blockDescriptors[i].numDirectories != 0) {
+            printf(" Block %d has %d directories\n", i, ext2Fs.blockDescriptors[i].numDirectories);
+        }
+    }
 
     printf("Hello, World\n");
 
