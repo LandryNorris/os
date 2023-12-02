@@ -52,6 +52,16 @@ int readSuperblock(IdeDevice* device, Ext2Fs* fs) {
     fs->superBlock.blockCount = readUint32(data, 4);
     fs->superBlock.blockSize = 1024 << (readUint32(data, 24));
     fs->superBlock.numBlocksInGroup = readUint32(data, 32);
+    fs->superBlock.numInodesInGroup = readUint32(data, 40);
+
+    uint32_t major = readUint32(data, 76);
+
+    //TODO: read extended fields
+    if(major >= 1) {
+        fs->superBlock.inodeSize = readUint16(data, 88);
+    } else {
+        fs->superBlock.inodeSize = 128;
+    }
 
     return 1;
 }
@@ -89,7 +99,33 @@ void readBlockGroupDescriptor(IdeDevice* device, Ext2Fs* fs) {
     }
 }
 
-void readInode(SuperBlock* superBlock, int inodeAddress, Ext2Inode* inode) {
-    int group = inodeAddress * superBlock->numInodesInGroup;
-    //int block =
+void readInode(IdeDevice* device, Ext2Fs* fs, int inodeAddress, Ext2Inode* inode) {
+    uint32_t group = inodeAddress / fs->superBlock.numInodesInGroup;
+    uint32_t tableAddress = fs->blockDescriptors[group].inodeTableAddress;
+
+    // inode index is 1-indexed
+    uint32_t indexInGroup = inodeAddress - group * fs->superBlock.numInodesInGroup - 1;
+    uint32_t blockIndex = indexInGroup * fs->superBlock.inodeSize/fs->superBlock.blockSize;
+    uint32_t blockOffset = indexInGroup - blockIndex * (fs->superBlock.blockSize/fs->superBlock.inodeSize);
+
+    uint8_t* fileData = malloc(fs->superBlock.blockSize);
+    readBlock(device, fs, tableAddress + blockIndex, fileData);
+
+    uint8_t* data = fileData + blockOffset*fs->superBlock.inodeSize;
+
+    uint16_t typeAndPermissions = readUint16(data, 0);
+    inode->type = (typeAndPermissions >> 12) & 0xF;
+    inode->permissions = typeAndPermissions & 0xFFF;
+    inode->size = readUint32(data, 4);
+    inode->creationTime = readUint32(data, 12);
+
+    for(int i = 0; i < 12; i++) {
+        inode->directPointers[i] = readUint32(data, 40);
+    }
+
+    inode->singlyIndirectPointer = readUint32(data, 88);
+    inode->doublyIndirectPointer = readUint32(data, 92);
+    inode->triplyIndirectPointer = readUint32(data, 96);
+
+    free(fileData);
 }

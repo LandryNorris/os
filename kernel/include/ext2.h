@@ -22,6 +22,8 @@ typedef struct {
     uint32_t osId;
     uint16_t userIdForReservedBlocks;
     uint16_t groupIdForReservedBlocks;
+
+    uint16_t inodeSize;
 } SuperBlock;
 
 typedef enum {
@@ -46,19 +48,13 @@ typedef struct {
 
 typedef struct {
     uint8_t type;
-    uint8_t permissions;
+    uint16_t permissions;
     uint64_t size;
-    uint32_t directPointer1;
-    uint32_t directPointer2;
-    uint32_t directPointer3;
-    uint32_t directPointer4;
-    uint32_t directPointer5;
-    uint32_t directPointer6;
-    uint32_t directPointer7;
-    uint32_t directPointer8;
-    uint32_t directPointer9;
-    uint32_t directPointer10;
-    uint32_t directPointer11;
+    uint32_t creationTime;
+    uint32_t directPointers[12];
+    uint32_t singlyIndirectPointer;
+    uint32_t doublyIndirectPointer;
+    uint32_t triplyIndirectPointer;
 } Ext2Inode;
 
 typedef struct {
@@ -69,5 +65,6 @@ typedef struct {
 
 int readSuperblock(IdeDevice* device, Ext2Fs* fs);
 void readBlockGroupDescriptor(IdeDevice* device, Ext2Fs* fs);
+void readInode(IdeDevice* device, Ext2Fs* fs, int inodeAddress, Ext2Inode* inode);
 
 #endif //OS_EXT2_H

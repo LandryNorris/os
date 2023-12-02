@@ -67,8 +67,12 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     }
 
     Ext2Fs ext2Fs;
+    Ext2Inode rootInode;
     readSuperblock(&ide.devices[0], &ext2Fs);
     readBlockGroupDescriptor(&ide.devices[0], &ext2Fs);
+    readInode(&ide.devices[0], &ext2Fs, 2, &rootInode);
+
+    printf("Root inode: %d, %d, %d\n", rootInode.permissions, rootInode.size, rootInode.creationTime);
 
     printf("Found %d groups\n", ext2Fs.numGroups);
 
