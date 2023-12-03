@@ -2,6 +2,7 @@
 #define OS_EXT2_H
 
 #include <stdint.h>
+#include "vfs.h"
 
 typedef struct {
     uint32_t inodeCount;
@@ -55,6 +56,7 @@ typedef struct {
     uint32_t singlyIndirectPointer;
     uint32_t doublyIndirectPointer;
     uint32_t triplyIndirectPointer;
+    uint32_t tableAddress;
 } Ext2Inode;
 
 typedef struct {
@@ -66,5 +68,7 @@ typedef struct {
 int readSuperblock(IdeDevice* device, Ext2Fs* fs);
 void readBlockGroupDescriptor(IdeDevice* device, Ext2Fs* fs);
 void readInode(IdeDevice* device, Ext2Fs* fs, int inodeAddress, Ext2Inode* inode);
+void readDirectoryName(IdeDevice* device, Ext2Fs* fs, Ext2Inode* inode, char* buffer, int length);
+void mountExt2(IdeDevice* device, Ext2Fs* fs, VfsNode* vfsNode);
 
 #endif //OS_EXT2_H

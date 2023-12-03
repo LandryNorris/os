@@ -16,6 +16,7 @@
 #include "pci.h"
 #include "ide.h"
 #include "ext2.h"
+#include "vfs.h"
 
 __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     uint32_t address = rawAddress + LOAD_MEMORY_ADDRESS;
@@ -67,20 +68,9 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     }
 
     Ext2Fs ext2Fs;
-    Ext2Inode rootInode;
-    readSuperblock(&ide.devices[0], &ext2Fs);
-    readBlockGroupDescriptor(&ide.devices[0], &ext2Fs);
-    readInode(&ide.devices[0], &ext2Fs, 2, &rootInode);
 
-    printf("Root inode: %d, %d, %d\n", rootInode.permissions, rootInode.size, rootInode.creationTime);
-
-    printf("Found %d groups\n", ext2Fs.numGroups);
-
-    for(uint32_t i = 0; i < ext2Fs.numGroups; i++) {
-        if(ext2Fs.blockDescriptors[i].numDirectories != 0) {
-            printf(" Block %d has %d directories\n", i, ext2Fs.blockDescriptors[i].numDirectories);
-        }
-    }
+    initializeVfsRoot();
+    mountExt2(&ide.devices[0], &ext2Fs, &vfsRoot);
 
     printf("Hello, World\n");
 

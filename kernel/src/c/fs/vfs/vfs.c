@@ -12,6 +12,7 @@ void initializeVfsRoot() {
     vfsRoot.flags = FS_FLAG_DIRECTORY;
     vfsRoot.numChildren = 0;
     vfsRoot.numChildrenReserved = 0;
+    vfsRoot.children = 0;
 }
 
 VfsNode* getVfsNode(VfsNode* directory, char* name) {
@@ -31,6 +32,7 @@ void addChild(VfsNode* directory, VfsNode* child) {
 
     if(!directory->children) {
         directory->children = malloc(DEFAULT_NUM_CHILDREN*sizeof(VfsNode));
+        directory->numChildrenReserved = DEFAULT_NUM_CHILDREN;
     }
 
     //check if we need to grow the list

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <mem.h>
+#include <string.h>
 #include "ide.h"
 #include "ext2.h"
 
@@ -12,6 +13,16 @@ typedef struct {
     uint16_t numDirectories;
     uint8_t reserved[14];
 } __attribute__((packed)) Ext2RawBlockDescriptor;
+
+typedef struct {
+    uint32_t inode;
+    int nameLength;
+    char name[];
+} Ext2DirectoryEntry;
+
+int isExt2Directory(Ext2Inode* inode) {
+    return inode->type == 4;
+}
 
 inline uint32_t readUint32(void* data, int offset) {
     void* ptr = ((uint8_t*) data) + offset;
@@ -120,12 +131,113 @@ void readInode(IdeDevice* device, Ext2Fs* fs, int inodeAddress, Ext2Inode* inode
     inode->creationTime = readUint32(data, 12);
 
     for(int i = 0; i < 12; i++) {
-        inode->directPointers[i] = readUint32(data, 40);
+        inode->directPointers[i] = readUint32(data, 40 + 4*i);
     }
 
     inode->singlyIndirectPointer = readUint32(data, 88);
     inode->doublyIndirectPointer = readUint32(data, 92);
     inode->triplyIndirectPointer = readUint32(data, 96);
 
+    inode->tableAddress = tableAddress;
+
     free(fileData);
+}
+
+uint32_t getBlockIndex(Ext2Inode* inode, uint32_t block) {
+    if(block < 12) {
+        return inode->directPointers[block];
+    } else {
+        //TODO: handle indirect blocks
+        return -1;
+    }
+}
+
+int isPseudoDirectory(char* name) {
+    if(name[0] == '\0') return 0; //we should allow empty strings
+    int nameIsDot = (name[0] == '.' && name[1] == '\0');
+    int nameIsDotDot = (name[0] == '.' && name[1] == '.' && name[2] == '\0');
+
+    return nameIsDot || nameIsDotDot;
+}
+
+void addChildNodes(IdeDevice* device, Ext2Fs* fs, VfsNode* parentVfsNode, Ext2Inode* parentExtNode) {
+    if(parentVfsNode->numChildren > 0) {
+        printf("Parent node already has children\n");
+        return;
+    }
+    uint8_t* block = malloc(fs->superBlock.blockSize);
+    memset(block, 0, fs->superBlock.blockSize);
+
+    uint32_t address = getBlockIndex(parentExtNode, 0);
+    readBlock(device, fs, (int)address, block);
+
+    for(uint8_t* ptr = block; ptr < block + fs->superBlock.blockSize;) {
+        uint32_t inodeIndex = readUint32(ptr, 0);
+        VfsNode* vfsChild = malloc(sizeof(VfsNode));
+        vfsChild->flags = 0;
+        vfsChild->numChildren = 0;
+        vfsChild->numChildrenReserved = 0;
+        vfsChild->children = 0;
+
+        Ext2Inode* ext2Inode = malloc(sizeof(Ext2Inode));
+        readInode(device, fs, inodeIndex, ext2Inode);
+
+        // Todo: handle empty directory node in middle
+        if(inodeIndex == 0) {
+            break;
+        }
+
+        // TODO: handle if directory entries have a second name byte
+        uint16_t nameLength = ptr[6];
+        uint16_t size = readUint16(ptr, 4);
+
+        memcpy(vfsChild->name, ptr + 8, nameLength);
+        vfsChild->name[nameLength] = '\0';
+
+        // move the size of the directory entry
+        ptr += size;
+
+        if(isPseudoDirectory(vfsChild->name)) {
+            free(vfsChild);
+            continue;
+        }
+
+        vfsChild->device = ext2Inode;
+
+        addChild(parentVfsNode, vfsChild);
+
+        if(isExt2Directory(ext2Inode)) {
+            vfsChild->flags |= FS_FLAG_DIRECTORY;
+        }
+    }
+
+    free(block);
+}
+
+void addChildNodesRecursive(IdeDevice* device, Ext2Fs* fs, VfsNode* parentVfsNode, Ext2Inode* parentExtNode) {
+    addChildNodes(device, fs, parentVfsNode, parentExtNode);
+
+    for(int i = 0; i < parentVfsNode->numChildren; i++) {
+        VfsNode* childVfsNode = (VfsNode*) parentVfsNode->children[i];
+        Ext2Inode* ext2Inode = childVfsNode->device;
+
+        if(!ext2Inode || !isExt2Directory(ext2Inode)) continue;
+
+        addChildNodesRecursive(device, fs, childVfsNode, ext2Inode);
+    }
+}
+
+void mountExt2(IdeDevice* device, Ext2Fs* fs, VfsNode* vfsNode) {
+    if(!isDirectory(vfsNode)) {
+        printf("Can't mountExt2 fs on a non-directory");
+        return;
+    }
+
+    readSuperblock(device, fs);
+    readBlockGroupDescriptor(device, fs);
+
+    Ext2Inode rootNode;
+    readInode(device, fs, 2, &rootNode);
+
+    addChildNodesRecursive(device, fs, vfsNode, &rootNode);
 }
