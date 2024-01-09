@@ -19,7 +19,7 @@ void readShorts(int port, void* data, int size) {
 void ataReadSectors(IdeDevice* device, uint32_t blockAddress, uint8_t* buffer, int length) {
     ideWrite(device->channel, ATA_REG_CONTROL, 0x02);
 
-    int numSectors = length/512 + 1;
+    int numSectors = length/512;
 
     ataWaitUntilReady(device->channel);
 
@@ -34,6 +34,7 @@ void ataReadSectors(IdeDevice* device, uint32_t blockAddress, uint8_t* buffer, i
     ideWrite(device->channel, ATA_REG_LBA2, (blockAddress & 0x00FF0000) >> 16);
     ideWrite(device->channel, ATA_REG_COMMAND, ATA_CMD_READ_PIO);
     ataIoWait(device->channel);
+    ataWaitUntilReady(device->channel);
 
     int bus = ide.channels[device->channel].base;
 
