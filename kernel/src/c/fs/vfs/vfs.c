@@ -9,10 +9,17 @@ VfsNode vfsRoot;
 void initializeVfsRoot() {
     strcpy(vfsRoot.name, "/");
 
-    vfsRoot.flags = FS_FLAG_DIRECTORY;
-    vfsRoot.numChildren = 0;
-    vfsRoot.numChildrenReserved = 0;
-    vfsRoot.children = 0;
+    initializeVfsNode(&vfsRoot);
+    vfsRoot.flags |= FS_FLAG_DIRECTORY;
+}
+
+void initializeVfsNode(VfsNode* node) {
+    node->children = 0;
+    node->numChildren = 0;
+    node->numChildrenReserved = 0;
+    node->flags = 0;
+    node->device = 0;
+    node->name[0] = '\0';
 }
 
 VfsNode* getVfsNode(VfsNode* directory, char* name) {

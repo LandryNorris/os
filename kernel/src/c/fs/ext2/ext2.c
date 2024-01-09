@@ -174,10 +174,7 @@ void addChildNodes(IdeDevice* device, Ext2Fs* fs, VfsNode* parentVfsNode, Ext2In
     for(uint8_t* ptr = block; ptr < block + fs->superBlock.blockSize;) {
         uint32_t inodeIndex = readUint32(ptr, 0);
         VfsNode* vfsChild = malloc(sizeof(VfsNode));
-        vfsChild->flags = 0;
-        vfsChild->numChildren = 0;
-        vfsChild->numChildrenReserved = 0;
-        vfsChild->children = 0;
+        initializeVfsNode(vfsChild);
 
         Ext2Inode* ext2Inode = malloc(sizeof(Ext2Inode));
         readInode(device, fs, inodeIndex, ext2Inode);

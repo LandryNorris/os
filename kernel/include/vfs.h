@@ -29,6 +29,7 @@ typedef struct {
 extern VfsNode vfsRoot;
 
 void initializeVfsRoot();
+void initializeVfsNode(VfsNode* node);
 VfsNode* getVfsNode(VfsNode* directory, char* name);
 void addChild(VfsNode* directory, VfsNode* child);
 
