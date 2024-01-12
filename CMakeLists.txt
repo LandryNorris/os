@@ -43,3 +43,6 @@ add_dependencies(kernel libc libk)
 target_link_libraries(kernel PRIVATE libc libk)
 
 target_link_options(kernel PRIVATE "-T${LINKER_SCRIPT}")
+
+message(${CMAKE_CURRENT_BINARY_DIR})
+add_custom_target(iso COMMAND ${CMAKE_SOURCE_DIR}/tools/iso.sh ${CMAKE_CURRENT_BINARY_DIR}/kernel DEPENDS kernel)
