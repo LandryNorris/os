@@ -10,13 +10,16 @@ C and nasm for assembly files.
 Building
 --------
 
-This project uses make. To build the
-kernel, run `make build/os.bin`, or
-just `make`. This will create a file
-os.bin in the build folder
+This project uses cmake. To build the
+kernel, create a build folder and cd
+into it. Then run `cmake ..` in the
+build folder, and run `cmake --build .`,
+or to build a full iso, run 
+`cmake --build . --target iso`
 
 To build a bootable iso file, run
-`./iso.sh` in the tools folder. This 
+`./iso.sh <path to kernel binary>` in 
+the tools folder. This 
 will create a bootable iso in the 
 build folder.
 
@@ -32,7 +35,7 @@ Debugging
 IDEs like CLion provide helpful debugging 
 tools. If configured correctly, QEMU can
 act as a GDB remote debugger. To configure
-this, make sure to run `make debug` to
+this, make sure to build with the Debug configuration
 create a build with debug symbols. Then
 make sure to add the `-s -S` flags, which
 tell QEMU to wait for a gdb connection.
@@ -43,9 +46,7 @@ to connect manually, run `gdb` in the console.
 Then run `file kernel/build/os.bin` so gdb
 knows what it's debugging. If the gdb console
 says 'Reading symbols from kernel/build/os.bin...',
-the debug symbols are loaded. If it gives an
-error, try to `make clean` and `make debug`
-and see if it sees the symbols now. When you
+the debug symbols are loaded. When you
 have loaded the symbols, run `target remote 
 localhost:1234` so gdb knows how to connect to
 the remote debugger. The default port is 1234.
@@ -64,13 +65,13 @@ server' run configuration. Set the configuration
 options as below:
 
 ```
-Target: debugiso
-Executable Binary: <path to os.bin>
+Target: iso
+Executable Binary: kernel
 Debugger: Bundled GDB (multiarch)
 Download Executable: If updated
 'target remote' args: localhost:1234
 GDB server: qemu-system-i386
-GDB server args: -s -S -cdrom <path to iso>
+GDB server args: -s -S -cdrom <path to iso> -serial stdio -drive file=hdd/ext2.img,format=raw
 ```
 
 Click the 'Debug' button in the IDE to
@@ -78,8 +79,8 @@ start QEMU. Breakpoints and other debugging
 tools within CLion will work.
 
 If breakpoints are disabled when the kernel
-is running, check that the target is set to 
-debugiso. If it is, and breakpoints are still
-disabled, try a `make clean` first to remove
+is running, check that the configuration is
+Debug. If it is, and breakpoints are still
+disabled, try a clean first to remove
 any non-optimized builds.
 
