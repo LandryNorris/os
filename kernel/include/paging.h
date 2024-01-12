@@ -44,7 +44,7 @@ extern PageDirectory* boot_page_directory;
  * @param virtualAddress
  * @return the index of the page table in a page directory
  */
-inline uint32_t getPageDirectoryIndex(uint32_t virtualAddress) {
+static inline uint32_t getPageDirectoryIndex(uint32_t virtualAddress) {
     return virtualAddress >> 22;
 }
 
@@ -52,7 +52,7 @@ inline uint32_t getPageDirectoryIndex(uint32_t virtualAddress) {
  * @param virtualAddress
  * @return the index of the page in a page table
  */
-inline uint32_t getTableIndex(uint32_t virtualAddress) {
+static inline uint32_t getTableIndex(uint32_t virtualAddress) {
     return (virtualAddress >> 12) & 0x3FF;
 }
 
@@ -60,7 +60,7 @@ inline uint32_t getTableIndex(uint32_t virtualAddress) {
  * @param virtualAddress
  * @return number of bytes into a page
  */
-inline uint32_t getPageIndex(uint32_t virtualAddress) {
+static inline uint32_t getPageIndex(uint32_t virtualAddress) {
     return virtualAddress & 0xFFF;
 }
 

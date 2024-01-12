@@ -33,7 +33,7 @@ void initializeVfsNode(VfsNode* node);
 VfsNode* getVfsNode(VfsNode* directory, char* name);
 void addChild(VfsNode* directory, VfsNode* child);
 
-inline int isDirectory(VfsNode* node) {
+static inline int isDirectory(VfsNode* node) {
     return node->flags | FS_FLAG_DIRECTORY;
 }
 
