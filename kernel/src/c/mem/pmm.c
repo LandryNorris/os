@@ -9,13 +9,13 @@ uint8_t* bitmap;
 uint32_t pageCount;
 uint32_t bitmapSize;
 
-inline void setBit(uint32_t i) {
+static inline void setBit(uint32_t i) {
     uint32_t index = i / PAGES_PER_BUCKET;
     uint32_t bitIndex = i % PAGES_PER_BUCKET;
     bitmap[index] |= (1 << bitIndex);
 }
 
-inline void clearBit(int i) {
+static inline void clearBit(int i) {
     int index = i / PAGES_PER_BUCKET;
     int bitIndex = i % PAGES_PER_BUCKET;
     bitmap[index] &= ~(1 << bitIndex);

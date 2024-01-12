@@ -24,12 +24,12 @@ int isExt2Directory(Ext2Inode* inode) {
     return inode->type == 4;
 }
 
-inline uint32_t readUint32(void* data, int offset) {
+static inline uint32_t readUint32(void* data, int offset) {
     void* ptr = ((uint8_t*) data) + offset;
     return *((uint32_t*) ptr);
 }
 
-inline uint16_t readUint16(void* data, int offset) {
+static inline uint16_t readUint16(void* data, int offset) {
     void* ptr = ((uint8_t*) data) + offset;
     return *((uint16_t*) ptr);
 }

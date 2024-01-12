@@ -202,7 +202,7 @@ void setPageDirectory(PageDirectory* dir) {
  * @param ptr
  * @return
  */
-inline uint32_t alignToPage(uint32_t ptr) {
+static inline uint32_t alignToPage(uint32_t ptr) {
     if ((ptr & 0x0000FFF) == 0) return ptr;
     return (ptr & 0xFFFFF000) + 0x1000;
 }
