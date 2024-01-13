@@ -7,21 +7,12 @@ set(CMAKE_ASM_COMPILER nasm)
 set(CMAKE_ASM_EXTENSIONS asm)
 set(CMAKE_VERBOSE_MAKEFILE true)
 
-set(CMAKE_ASM_OBJECT_FORMAT elf32)
-
 set(CMAKE_ASM_COMPILE_OBJECT "<CMAKE_ASM_COMPILER> \
      <FLAGS> -o <OBJECT> <SOURCE>")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 
-# Set target architecture
-add_compile_options($<$<COMPILE_LANGUAGE:C>:--target=i386-pc-none-elf>)
-add_compile_options($<$<COMPILE_LANGUAGE:C>:-ffreestanding>)
-add_compile_options($<$<COMPILE_LANGUAGE:ASM>:-felf32>)
-
-add_link_options(--target=i386-pc-none-elf)
-add_link_options(-ffreestanding -nostdlib -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-3dnow -Wl,-no-pie)
-
+include(build_flags.cmake)
 include(libc/libc.cmake)
 include(libk/libk.cmake)
 include(kernel/kernel.cmake)
