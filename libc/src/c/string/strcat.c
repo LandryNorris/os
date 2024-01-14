@@ -1,7 +1,8 @@
 
 #include <string.h>
+#include "libc_name.h"
 
-char* strcat(char* dst, char* src) {
+char* LIBC_SYMBOL(strcat)(char* dst, char* src) {
     char* s = src;
     char* d = dst;
     for (; *d; d++);

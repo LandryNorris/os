@@ -1,5 +1,7 @@
 
-char* strcpy(char* dst, const char* src) {
+#include "libc_name.h"
+
+char* LIBC_SYMBOL(strcpy)(char* dst, const char* src) {
     char* s = src;
     char* d = dst;
 

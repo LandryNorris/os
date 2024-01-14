@@ -3,12 +3,13 @@
 #define OS_STDIO_H
 
 #include <buffer.h>
+#include "libc_name.h"
 
-extern FileBuffer* stdin;
-extern FileBuffer* stdout;
+extern FileBuffer* LIBC_SYMBOL(stdin);
+extern FileBuffer* LIBC_SYMBOL(stdout);
 
-int printf(const char* __restrict, ...);
-int putchar(char);
-int puts(const char*);
+int LIBC_SYMBOL(printf)(const char* __restrict, ...);
+int LIBC_SYMBOL(putchar)(char);
+int LIBC_SYMBOL(puts)(const char*);
 
 #endif //OS_STDIO_H
