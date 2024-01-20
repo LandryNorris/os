@@ -114,3 +114,41 @@ TEST(PrintTests, PrintfHexTests) {
 
     free(buffer);
 }
+
+TEST(PrintTests, PrintfMultiLine) {
+    FileBuffer* buffer = allocateBuffer(100);
+    initializeBuffers(nullptr, buffer);
+
+    os_libc_printf("Multiline\nString\nWith\nSeveral\nLines");
+
+    char value[100] = {0};
+
+    char c;
+    for(int i = 0; readChar(buffer, &c); i++) {
+        value[i] = c;
+    }
+
+    ASSERT_STREQ(value, "Multiline\nString\nWith\nSeveral\nLines");
+
+    free(buffer);
+}
+
+TEST(PrintTests, PrintfMultiCall) {
+    FileBuffer* buffer = allocateBuffer(100);
+    initializeBuffers(nullptr, buffer);
+
+    os_libc_printf("Multiline\n");
+    os_libc_printf("String\n");
+    os_libc_printf("Value: %d %f\n", 100, -30.0);
+
+    char value[100] = {0};
+
+    char c;
+    for(int i = 0; readChar(buffer, &c); i++) {
+        value[i] = c;
+    }
+
+    ASSERT_STREQ(value, "Multiline\nString\nValue: 100 -30.000000\n");
+
+    free(buffer);
+}
