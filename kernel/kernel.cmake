@@ -12,3 +12,4 @@ target_link_libraries(kernel PRIVATE libc libk)
 
 target_link_options(kernel PRIVATE "-T${LINKER_SCRIPT}")
 
+setupEmbeddedFlags(kernel)
