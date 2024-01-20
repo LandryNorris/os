@@ -1,5 +1,4 @@
 
-
 char* strcpy(char* dst, const char* src) {
     char* s = src;
     char* d = dst;

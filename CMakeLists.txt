@@ -1,15 +1,11 @@
 cmake_minimum_required(VERSION 3.13)
-project(kernel C ASM CXX)
+project(kernel C ASM)
 
 find_program(CLANG_PATH_RAW clang)
-find_program(CLANG++_PATH_RAW clang++)
-
 string(STRIP ${CLANG_PATH_RAW} CLANG_PATH)
-string(STRIP ${CLANG++_PATH_RAW} CLANG++_PATH)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_COMPILER ${CLANG_PATH})
-set(CMAKE_CXX_COMPILER ${CLANG++_PATH})
 set(CMAKE_ASM_COMPILER nasm)
 set(CMAKE_ASM_EXTENSIONS asm)
 set(CMAKE_VERBOSE_MAKEFILE true)

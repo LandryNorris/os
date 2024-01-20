@@ -1,5 +1,4 @@
 
-
 int strcmp(const char* str1, const char* str2) {
     const char* p1 = str1;
     const char* p2 = str2;
