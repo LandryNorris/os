@@ -92,3 +92,25 @@ TEST(PrintTests, PrintfFloatConversionTest) {
 
     free(buffer);
 }
+
+TEST(PrintTests, PrintfHexTests) {
+    FileBuffer* buffer = allocateBuffer(100);
+    initializeBuffers(nullptr, buffer);
+
+    int value1 = 1;
+    int value2 = 0x123ABC;
+    int value3 = 0xABC;
+    int value4 = 0xDEF1;
+    os_libc_printf("Value: %x %x %x %x\n", value1, value2, value3, value4);
+
+    char value[100] = {0};
+
+    char c;
+    for(int i = 0; readChar(buffer, &c); i++) {
+        value[i] = c;
+    }
+
+    ASSERT_STREQ(value, "Value: 00000001 00123ABC 00000ABC 0000DEF1\n");
+
+    free(buffer);
+}
