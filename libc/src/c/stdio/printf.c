@@ -1,17 +1,16 @@
 #include <stdarg.h>
 #include <stdio.h>
-#include "libc_name.h"
 
 void printInt(long num) {
     // Handle negative numbers
     if (num < 0) {
-        LIBC_SYMBOL(putchar)('-');
+        putchar('-');
         num = -num;
     }
 
     // Handle zero separately
     if (num == 0) {
-        LIBC_SYMBOL(putchar)('0');
+        putchar('0');
         return;
     }
 
@@ -22,7 +21,7 @@ void printInt(long num) {
     }
     while (divisor > 0) {
         int digit = integralPart / divisor;
-        LIBC_SYMBOL(putchar)(digit + '0');
+        putchar(digit + '0');
         integralPart %= divisor;
         divisor /= 10;
     }
@@ -40,20 +39,20 @@ void printHex(uint32_t value) {
         uint32_t hex_char = hex_digit < 10 ? '0' + hex_digit : 'A' + (hex_digit - 10);
 
         // Print the hex digit
-        LIBC_SYMBOL(putchar)((int) hex_char);
+        putchar((int) hex_char);
     }
 }
 
 void printDouble(double num, int minDigitsBeforeDecimal, int minDigitsAfterDecimal) {
     // Handle negative numbers
     if (num < 0) {
-        LIBC_SYMBOL(putchar)('-');
+        putchar('-');
         num = -num;
     }
 
     // Handle zero separately
     if (num == 0) {
-        LIBC_SYMBOL(putchar)('0');
+        putchar('0');
         return;
     }
 
@@ -72,7 +71,7 @@ void printDouble(double num, int minDigitsBeforeDecimal, int minDigitsAfterDecim
     if (numDigitsBeforeDecimal < minDigitsBeforeDecimal) {
         int leadingZeros = minDigitsBeforeDecimal - numDigitsBeforeDecimal;
         while (leadingZeros > 0) {
-            LIBC_SYMBOL(putchar)('0');
+            putchar('0');
             leadingZeros--;
         }
     }
@@ -80,7 +79,7 @@ void printDouble(double num, int minDigitsBeforeDecimal, int minDigitsAfterDecim
     //print the digits before the decimal
     printInt(integral);
 
-    LIBC_SYMBOL(putchar)('.');
+    putchar('.');
 
     // Print digits after the decimal point
     int numDigitsAfterDecimal = minDigitsAfterDecimal;
@@ -88,12 +87,12 @@ void printDouble(double num, int minDigitsBeforeDecimal, int minDigitsAfterDecim
         num *= 10;
         char c = ((long) num % 10) + '0';
         if (c < '0') c = '0'; //hack for bug due to overflow
-        LIBC_SYMBOL(putchar)(c);
+        putchar(c);
         numDigitsAfterDecimal--;
     }
 }
 
-int LIBC_SYMBOL(printf)(const char* __restrict s, ...) {
+int printf(const char* __restrict s, ...) {
     va_list parameters;
     va_start(parameters, s);
 
@@ -111,7 +110,7 @@ int LIBC_SYMBOL(printf)(const char* __restrict s, ...) {
 
         if (isParsingFormat) {
             if (c == '%') {
-                LIBC_SYMBOL(putchar)('%');
+                putchar('%');
                 isParsingFormat = 0;
             } else if (c == 'd') {
                 int d = va_arg(parameters, int);
@@ -124,14 +123,14 @@ int LIBC_SYMBOL(printf)(const char* __restrict s, ...) {
             } else if (c == 's') {
                 char* string = va_arg(parameters, char*);
                 if (string) {
-                    LIBC_SYMBOL(puts)(string);
+                    puts(string);
                 } else {
-                    LIBC_SYMBOL(puts)("(null)");
+                    puts("(null)");
                 }
                 isParsingFormat = 0;
             } else if (c == 'c') {
                 char character = va_arg(parameters, int);
-                LIBC_SYMBOL(putchar)(character);
+                putchar(character);
                 isParsingFormat = 0;
             } else if (c == 'x') {
                 uint32_t value = va_arg(parameters, uint32_t);
@@ -140,13 +139,13 @@ int LIBC_SYMBOL(printf)(const char* __restrict s, ...) {
             }
         } else if (isEscaped) {
             if (c == '\\') {
-                LIBC_SYMBOL(putchar)('\\');
+                putchar('\\');
             } else if (c == 'n') {
-                LIBC_SYMBOL(putchar)('\n');
+                putchar('\n');
             }
             isEscaped = 0;
         } else {
-            LIBC_SYMBOL(putchar)(c);
+            putchar(c);
         }
     }
 

@@ -1,9 +1,8 @@
 #include <stddef.h>
-#include "libc_name.h"
 
 //Todo(landry): Use word copying where possible.
 
-__attribute__((unused)) int LIBC_SYMBOL(memcmp)(const void* p1, const void* p2, size_t size) {
+__attribute__((unused)) int memcmp(const void* p1, const void* p2, size_t size) {
     const unsigned char* a = (const unsigned char*) p1;
     const unsigned char* b = (const unsigned char*) p2;
     for (size_t i = 0; i < size; i++) {
@@ -14,7 +13,7 @@ __attribute__((unused)) int LIBC_SYMBOL(memcmp)(const void* p1, const void* p2, 
     return 0;
 }
 
-__attribute__((unused)) void* LIBC_SYMBOL(memcpy)(void* __restrict p1, const void* __restrict p2, size_t size) {
+__attribute__((unused)) void* memcpy(void* __restrict p1, const void* __restrict p2, size_t size) {
     unsigned char* dst = (unsigned char*) p1;
     const unsigned char* src = (const unsigned char*) p2;
 
@@ -25,7 +24,7 @@ __attribute__((unused)) void* LIBC_SYMBOL(memcpy)(void* __restrict p1, const voi
     return p1;
 }
 
-__attribute__((unused)) void* LIBC_SYMBOL(memmove)(void* p1, const void* p2, size_t size) {
+__attribute__((unused)) void* memmove(void* p1, const void* p2, size_t size) {
     unsigned char* dst = (unsigned char*) p1;
     const unsigned char* src = (const unsigned char*) p2;
     if (dst < src) {
@@ -38,7 +37,7 @@ __attribute__((unused)) void* LIBC_SYMBOL(memmove)(void* p1, const void* p2, siz
     return p1;
 }
 
-__attribute__((unused)) void* LIBC_SYMBOL(memset)(void* ptr, int value, size_t size) {
+__attribute__((unused)) void* memset(void* ptr, int value, size_t size) {
     unsigned char* dst = (unsigned char*) ptr;
     for (size_t i = 0; i < size; i++)
         dst[i] = (unsigned char) value;

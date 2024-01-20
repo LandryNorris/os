@@ -18,6 +18,8 @@ add_executable(libc_test ${TEST_SOURCES})
 target_link_libraries(libc_test GTest::gtest)
 target_link_libraries(libc_test libc_test_lib)
 
+include(${CMAKE_SOURCE_DIR}/libc/libc_mangling.cmake)
+
 target_include_directories(libc_test PRIVATE ${CMAKE_SOURCE_DIR}/libc/test/include ${CMAKE_SOURCE_DIR})
 
 include(GoogleTest)
