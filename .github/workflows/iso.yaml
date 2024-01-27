@@ -1,3 +1,4 @@
+name: iso
 on:
   push:
     branches:
@@ -8,10 +9,11 @@ jobs:
     name: Build iso
     runs-on: ubuntu-latest
     steps:
+      - uses: ilammy/setup-nasm@v1
       - name: Checkout Code
         uses: actions/checkout@v4
       - name: Build iso
-        run:  cd tools && ./iso.sh
+        run:  cd tools && ./build.sh && ./iso.sh
       - name: Upload iso
         uses: actions/upload-artifact@v4
         with:
