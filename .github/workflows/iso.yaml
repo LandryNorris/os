@@ -1,0 +1,19 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build iso
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Build iso
+        run:  cd tools && ./iso.sh
+      - name: Upload iso
+        uses: actions/upload-artifact@v4
+        with:
+          name: os.iso
+          path: 'build/os.iso'
