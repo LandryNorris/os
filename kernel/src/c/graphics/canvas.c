@@ -18,7 +18,7 @@ void initializeCanvas(Canvas* canvas, uint32_t w, uint32_t h, uint32_t pitch,
 void drawRect(Canvas* canvas, int x, int y, int w, int h, RgbColor color) {
     for(int row = y; row < y+h; row++) {
         for(int col = x; col < x+w; col++) {
-            int index = 4*col + row*canvas->pitch;
+            uint32_t index = canvas->bpp/8*col + row*canvas->pitch;
             canvas->buffer[index+2] = color.r;
             canvas->buffer[index+1] = color.g;
             canvas->buffer[index] = color.b;
@@ -33,6 +33,7 @@ void drawCharacter(Canvas* canvas, char c, int x, int y) {
     uint32_t fontHeight = canvas->fontHeight;
     PsfFont font = defaultFont; //Todo: store font in canvas
     PsfCharacter character = font.characterTable[c-32];
+    int bytesPerPixel = canvas->bpp/8;
 
     for(uint32_t drawY = 0; drawY < fontHeight; drawY++) {
         for(uint32_t drawX = 0; drawX < fontWidth; drawX++) {
@@ -46,7 +47,7 @@ void drawCharacter(Canvas* canvas, char c, int x, int y) {
 
             uint8_t isColored = character.bitmap[fontY] & (1 << (7-fontX));
             if(isColored) {
-                int index = 4*(drawX + x) + (drawY + y)*canvas->pitch;
+                int index = bytesPerPixel*(drawX + x) + (drawY + y)*canvas->pitch;
                 RgbColor color = canvas->textColor;
                 canvas->buffer[index+2] = color.r;
                 canvas->buffer[index+1] = color.g;
