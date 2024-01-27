@@ -65,7 +65,9 @@ void initializeIdt() {
     setIdtEntry(128, (uint32_t) exception128, 0x08, 0x8E);
 
     setIdt((uint32_t) &(idtPtr));
+#ifndef TESTING
     __asm__ volatile("sti");
+#endif
 }
 
 void setIdtEntry(int index, uint32_t base, uint16_t sel, uint8_t flags) {
