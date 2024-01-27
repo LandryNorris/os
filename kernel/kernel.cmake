@@ -19,9 +19,12 @@ setupEmbeddedFlags(kernel)
 include(GoogleTest)
 
 file(GLOB_RECURSE SERIAL_SOURCES ${CMAKE_SOURCE_DIR}/kernel/src/c/serial/**.c)
+file(GLOB_RECURSE IDT_SOURCES ${CMAKE_SOURCE_DIR}/kernel/src/c/idt/**.c)
 
-add_executable(kernel_test ${KERNEL_TEST_SOURCES} ${SERIAL_SOURCES})
+add_executable(kernel_test ${KERNEL_TEST_SOURCES} ${SERIAL_SOURCES} ${IDT_SOURCES})
 target_link_libraries(kernel_test GTest::gtest)
+
+target_compile_definitions(kernel_test PRIVATE TESTING)
 
 target_include_directories(kernel_test PRIVATE ${CMAKE_SOURCE_DIR}/kernel/include)
 target_include_directories(kernel_test PRIVATE ${CMAKE_SOURCE_DIR}/kernel/test/include)
