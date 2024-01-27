@@ -9,6 +9,10 @@ jobs:
     name: Build iso
     runs-on: ubuntu-latest
     steps:
+      - uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: mtools
+          version: 1.0
       - uses: ilammy/setup-nasm@v1
       - name: Checkout Code
         uses: actions/checkout@v4
