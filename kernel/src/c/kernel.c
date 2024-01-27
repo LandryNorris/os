@@ -67,10 +67,12 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
                device->size/1024/1024/2);
     }
 
-    Ext2Fs ext2Fs;
-
     initializeVfsRoot();
-    mountExt2(&ide.devices[0], &ext2Fs, &vfsRoot);
+
+    if(ide.devices[0].exists) {
+        Ext2Fs ext2Fs;
+        mountExt2(&ide.devices[0], &ext2Fs, &vfsRoot);
+    }
 
     printf("Hello, World\n");
 
