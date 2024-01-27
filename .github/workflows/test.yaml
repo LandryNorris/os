@@ -7,6 +7,7 @@ jobs:
     name: Build and Run Tests
     runs-on: ubuntu-latest
     steps:
+      - uses: ilammy/setup-nasm@v1
       - name: Checkout Code
         uses: actions/checkout@v4
       - name: Build and Run Tests
