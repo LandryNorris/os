@@ -1,8 +1,6 @@
 
 enable_language(CXX)
 
-cmake_policy(SET CMP0135 NEW)
-
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
