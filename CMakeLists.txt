@@ -4,6 +4,12 @@ project(kernel C ASM)
 find_program(CLANG_PATH_RAW clang)
 string(STRIP ${CLANG_PATH_RAW} CLANG_PATH)
 
+# Avoid warning about DOWNLOAD_EXTRACT_TIMESTAMP
+# This option was added in 3.24.0
+if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
+    cmake_policy(SET CMP0135 NEW)
+endif()
+
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_COMPILER ${CLANG_PATH})
 set(CMAKE_ASM_COMPILER nasm)
