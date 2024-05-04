@@ -81,6 +81,11 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
         getVendorIdString(vendorString, 13);
 
         printf("Vendor is: %s\n", vendorString);
+
+        CpuFeatures features;
+        checkFeatures(&features);
+
+        printf("Checked features\n");
     } else {
         printf("CPU ID is missing\n");
     }

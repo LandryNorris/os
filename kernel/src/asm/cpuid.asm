@@ -29,6 +29,11 @@ hasCpuId:
 global callCpuId
 callCpuId:
     push ebx
+
+    ; some older processors don't update these
+    mov ecx, 0
+    mov ebx, 0
+
     mov eax, [esp+8]
     cpuid
     mov eax, [esp+12]

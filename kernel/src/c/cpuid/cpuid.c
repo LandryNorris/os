@@ -21,3 +21,12 @@ void getVendorIdString(char* string, int length) {
         string[length-1] = '\0';
     }
 }
+
+void checkFeatures(CpuFeatures* features) {
+    uint32_t ecx, edx;
+    uint32_t dummy = 0;
+    callCpuId(1, &dummy, &ecx, &edx);
+
+    features->raw1 = ecx;
+    features->raw2 = edx;
+}
