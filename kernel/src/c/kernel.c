@@ -77,6 +77,10 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
 
     if(hasCpuId()) {
         printf("CPU ID is present\n");
+        char vendorString[13];
+        getVendorIdString(vendorString, 13);
+
+        printf("Vendor is: %s\n", vendorString);
     } else {
         printf("CPU ID is missing\n");
     }

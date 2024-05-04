@@ -28,5 +28,16 @@ hasCpuId:
 
 global callCpuId
 callCpuId:
-    mov eax, [esp+4]
+    push ebx
+    mov eax, [esp+8]
     cpuid
+    mov eax, [esp+12]
+    mov [eax], ebx
+
+    mov eax, [esp+16]
+    mov [eax], ecx
+
+    mov eax, [esp+20]
+    mov [eax], edx
+    pop ebx
+    ret
