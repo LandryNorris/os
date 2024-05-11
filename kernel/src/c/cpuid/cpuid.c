@@ -22,7 +22,7 @@ void getVendorIdString(char* string, int length) {
     }
 }
 
-void checkFeatures(CpuFeatures* features) {
+void getCpuFeatures(CpuFeatures* features) {
     uint32_t ecx, edx;
     uint32_t dummy = 0;
     callCpuId(1, &dummy, &ecx, &edx);

@@ -83,7 +83,7 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
         printf("Vendor is: %s\n", vendorString);
 
         CpuFeatures features;
-        checkFeatures(&features);
+        getCpuFeatures(&features);
 
         printf("Checked features\n");
     } else {
