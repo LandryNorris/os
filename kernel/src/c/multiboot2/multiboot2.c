@@ -31,7 +31,7 @@ int parseBootInfo(BootInfo* bootInfo, void* address) {
                 break;
             }
             case 14: {
-                AcpiOldRSDP* acpiInfo = (AcpiOldRSDP*) tagAddress;
+                Acpi1RSDP* acpiInfo = (Acpi1RSDP*) tagAddress;
                 bootInfo->rsdp = acpiInfo->rsdp;
             }
         }
