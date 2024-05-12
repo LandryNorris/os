@@ -21,8 +21,9 @@ include(GoogleTest)
 file(GLOB_RECURSE SERIAL_SOURCES ${CMAKE_SOURCE_DIR}/kernel/src/c/serial/**.c)
 file(GLOB_RECURSE IDT_SOURCES ${CMAKE_SOURCE_DIR}/kernel/src/c/idt/**.c)
 file(GLOB_RECURSE CPUID_SOURCES ${CMAKE_SOURCE_DIR}/kernel/src/c/cpuid/**.c)
+file(GLOB_RECURSE ACPI_SOURCES ${CMAKE_SOURCE_DIR}/kernel/src/c/acpi/**.c)
 
-add_executable(kernel_test ${KERNEL_TEST_SOURCES} ${SERIAL_SOURCES} ${IDT_SOURCES} ${CPUID_SOURCES})
+add_executable(kernel_test ${KERNEL_TEST_SOURCES} ${SERIAL_SOURCES} ${IDT_SOURCES} ${CPUID_SOURCES} ${ACPI_SOURCES})
 target_link_libraries(kernel_test GTest::gtest)
 
 target_compile_definitions(kernel_test PRIVATE TESTING)
