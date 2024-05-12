@@ -54,12 +54,7 @@ typedef struct __attribute__((packed)) {
     uint32_t type;
     uint32_t size;
     RSDP rsdp;
-} AcpiOldRSDP;
-
-typedef struct __attribute__((packed)) {
-    uint32_t type;
-    uint32_t rsdpv2;
-} AcpiNewRSDP;
+} Acpi1RSDP;
 
 typedef struct __attribute__((packed)) {
     /**
