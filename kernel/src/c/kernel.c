@@ -17,6 +17,7 @@
 #include "ide.h"
 #include "ext2.h"
 #include "vfs.h"
+#include "cpuid.h"
 
 __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     uint32_t address = rawAddress + LOAD_MEMORY_ADDRESS;
@@ -72,6 +73,21 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     if(ide.devices[0].exists) {
         Ext2Fs ext2Fs;
         mountExt2(&ide.devices[0], &ext2Fs, &vfsRoot);
+    }
+
+    if(hasCpuId()) {
+        printf("CPU ID is present\n");
+        char vendorString[13];
+        getVendorIdString(vendorString, 13);
+
+        printf("Vendor is: %s\n", vendorString);
+
+        CpuFeatures features;
+        getCpuFeatures(&features);
+
+        printf("Checked features\n");
+    } else {
+        printf("CPU ID is missing\n");
     }
 
     printf("Hello, World\n");
