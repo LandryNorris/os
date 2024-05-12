@@ -6,20 +6,29 @@ void getVendorIdString(char* string, int length) {
 
     callCpuId(0, &ebx, &ecx, &edx);
 
-    if(length >= 5) {
-        *((uint32_t*) string) = ebx;
+    // write 4 characters at a time, only if the provided length allows.
+
+    if(length < 5) {
+        string[0] = '\0';
+        return;
     }
-    if(length >= 9) {
-        *((uint32_t*) (string+4)) = edx;
+
+    *((uint32_t*) string) = ebx;
+
+    if(length < 9) {
+        string[4] = '\0';
+        return;
     }
-    if(length >= 13) {
-        *((uint32_t*) (string+8)) = ecx;
+
+    *((uint32_t*) (string + 4)) = edx;
+
+    if(length < 13) {
+        string[8] = '\0';
+        return;
     }
-    if(length > 13) {
-        string[12] = '\0';
-    } else {
-        string[length-1] = '\0';
-    }
+
+    *((uint32_t*) (string + 8)) = ecx;
+    string[12] = '\0';
 }
 
 void getCpuFeatures(CpuFeatures* features) {
