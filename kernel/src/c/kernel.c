@@ -18,6 +18,7 @@
 #include "ext2.h"
 #include "vfs.h"
 #include "cpuid.h"
+#include "rsdp.h"
 
 __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     uint32_t address = rawAddress + LOAD_MEMORY_ADDRESS;
@@ -54,6 +55,10 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     initializeBuffers(in, out);
 
     registerInterruptHandler(0x20 + 1, handleKeyboard);
+
+    int isValidRsdp = validateRSDP(&bootInfo.rsdp);
+
+    printf("Is RSDP valid? %d\n", isValidRsdp);
 
     PciBus* pciBus = malloc(sizeof(PciBus));
 
