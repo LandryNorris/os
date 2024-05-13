@@ -30,6 +30,10 @@ int parseBootInfo(BootInfo* bootInfo, void* address) {
                 bootInfo->pitch = framebufferInfo->pitch;
                 break;
             }
+            case 14: {
+                Acpi1RSDP* acpiInfo = (Acpi1RSDP*) tagAddress;
+                bootInfo->rsdp = acpiInfo->rsdp;
+            }
         }
     }
 

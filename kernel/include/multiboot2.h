@@ -2,6 +2,7 @@
 #define OS_MULTIBOOT2_H
 
 #include <stdint.h>
+#include "rsdp.h"
 
 typedef struct {
     uint8_t redPosition;
@@ -50,6 +51,12 @@ typedef struct __attribute__((packed)) {
 } FramebufferInfo;
 
 typedef struct __attribute__((packed)) {
+    uint32_t type;
+    uint32_t size;
+    RSDP rsdp;
+} Acpi1RSDP;
+
+typedef struct __attribute__((packed)) {
     /**
      * Memory available for use in kB
      */
@@ -79,6 +86,8 @@ typedef struct __attribute__((packed)) {
      */
     uint32_t pitch;
     DirectColorInfo colorInfo;
+
+    RSDP rsdp;
 } BootInfo;
 
 int parseBootInfo(BootInfo* bootInfo, void* address);
