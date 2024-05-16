@@ -22,6 +22,11 @@ void initializeVfsNode(VfsNode* node) {
     node->name[0] = '\0';
 }
 
+struct VfsNode** createVfsNodeList(int size) {
+    VfsNode** result = (VfsNode**) malloc(size*sizeof(VfsNode*));
+    return (struct VfsNode**) result;
+}
+
 VfsNode* getVfsNode(VfsNode* directory, char* name) {
     if(!isDirectory(directory) || !directory->children) return 0;
 
@@ -38,7 +43,7 @@ void addChild(VfsNode* directory, VfsNode* child) {
     if(!isDirectory(directory)) return;
 
     if(!directory->children) {
-        directory->children = (struct VfsNode**) malloc(DEFAULT_NUM_CHILDREN*sizeof(VfsNode*));
+        directory->children = createVfsNodeList(DEFAULT_NUM_CHILDREN);
         directory->numChildrenReserved = DEFAULT_NUM_CHILDREN;
     }
 
@@ -46,7 +51,7 @@ void addChild(VfsNode* directory, VfsNode* child) {
     if(directory->numChildren+1 > directory->numChildrenReserved) {
         VfsNode** previous = (VfsNode**) directory->children;
         int newSize = (int)(directory->numChildrenReserved*1.5);
-        directory->children = (struct VfsNode**) malloc(newSize*sizeof(VfsNode*));
+        directory->children = createVfsNodeList(newSize);
 
         memcpy((void*) directory->children, (void*) previous, directory->numChildren*sizeof(VfsNode*));
         free((void*) previous);
