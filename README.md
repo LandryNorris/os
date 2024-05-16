@@ -1,6 +1,8 @@
 Operating System
 ================
 
+[![Qodana](https://github.com/LandryNorris/os/actions/workflows/code-quality.yaml/badge.svg)](https://github.com/LandryNorris/os/actions/workflows/code-quality.yaml)
+
 This is a hobby operating system to
 build experience with low-level development.
 
@@ -84,3 +86,11 @@ Debug. If it is, and breakpoints are still
 disabled, try a clean first to remove
 any non-optimized builds.
 
+Code Quality
+============
+
+This project uses Qodana's clang-tidy checks 
+for code quality. Every PR will run a code 
+quality scan. PRs should conform to the rules 
+set in the clang-tidy configuration and 
+minimize the number of new issues introduced.
