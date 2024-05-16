@@ -21,6 +21,8 @@
  *
  */
 
+// NOLINTBEGIN
+
 #ifndef BUCKET_H
 #define BUCKET_H
 
@@ -126,3 +128,5 @@ void *realloc(void *ptr, size_t size); // The standard function.
 void mfree(void *ptr);   // The standard function.
 
 #endif   // BUCKET_H
+
+// NOLINTEND
