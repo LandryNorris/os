@@ -1,0 +1,3 @@
+bootstrap: mkdir -p build && cd build && cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
+linter: jetbrains/qodana-clang:2024.1-eap
+version: 1.0
