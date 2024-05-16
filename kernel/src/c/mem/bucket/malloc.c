@@ -22,9 +22,13 @@
  *
  */
 
+// NOLINTBEGIN
+
 /*
  * Modified for use with this OS. Main modifications include removing spinlock (this is
  * a single-threaded OS currently) and changing ctypes (this OS uses stdint).
+ *
+ * I also added the NOLINT comments for the linter
  */
 
 #include <string.h>
@@ -406,3 +410,5 @@ void mfree(void *ptr) {
     else
         bucket_update_largest(bucket);
 }
+
+// NOLINTEND
