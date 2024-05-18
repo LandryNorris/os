@@ -101,6 +101,7 @@ void readBlockGroupDescriptor(IdeDevice* device, Ext2Fs* fs) {
     }
 
     for(uint32_t i = 0; i < fs->numGroups; i++) {
+        //NOLINTNEXTLINE(clang-analyzer-core.uninitialized.Assign)
         fs->blockDescriptors[i].numDirectories = rawDescriptors[i].numDirectories;
         fs->blockDescriptors[i].inodeTableAddress = rawDescriptors[i].inodeTableAddress;
         fs->blockDescriptors[i].inodeUsageBitmapAddress = rawDescriptors[i].inodeUsageBitmapAddress;
@@ -112,6 +113,7 @@ void readBlockGroupDescriptor(IdeDevice* device, Ext2Fs* fs) {
 
 void readInode(IdeDevice* device, Ext2Fs* fs, int inodeAddress, Ext2Inode* inode) {
     uint32_t group = inodeAddress / fs->superBlock.numInodesInGroup;
+    //NOLINTNEXTLINE(clang-analyzer-core.uninitialized.Assign)
     uint32_t tableAddress = fs->blockDescriptors[group].inodeTableAddress;
 
     // inode index is 1-indexed
