@@ -2,7 +2,8 @@
 #include "multiboot2.h"
 
 void* align(const void* address) {
-    return (void*)((uint32_t)((uint8_t*)address + 7) & ~7);
+    // NOLINTNEXTLINE(performance-no-int-to-ptr)
+    return (void*)((uint32_t)((uint8_t*)address + 7) & ~7U);
 }
 
 void processMultiboot2Tag(BootInfo* bootInfo, const Multiboot2Tag* tagAddress) {
