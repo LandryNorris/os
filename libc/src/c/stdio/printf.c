@@ -149,5 +149,7 @@ int printf(const char* __restrict s, ...) {
         }
     }
 
+    va_end(parameters);
+
     return 0;
 }
