@@ -88,3 +88,5 @@ CheckOptions:
     value: 8
   - key: readability-implicit-bool-conversion.AllowPointerConditions
     value: true
+  - key: readability-magic-numbers.IgnoredIntegerValues
+    value: '0;1;2;3;4;7;8;0xFF;0xFF00;0xFF0000;0xFF000000'
