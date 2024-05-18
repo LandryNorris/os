@@ -3,7 +3,7 @@
 
 void* align(const void* address) {
     // NOLINTNEXTLINE(performance-no-int-to-ptr)
-    return (void*)((uint32_t)((uint8_t*)address + 7) & ~7U);
+    return (void*)((uint32_t)((uint8_t*)address + 7) & ~0b111U);
 }
 
 void processMultiboot2Tag(BootInfo* bootInfo, const Multiboot2Tag* tagAddress) {
