@@ -21,7 +21,7 @@ void printInt(long num) {
     }
     while (divisor > 0) {
         int digit = integralPart / divisor;
-        putchar(digit + '0');
+        putchar((char)(digit + '0'));
         integralPart %= divisor;
         divisor /= 10;
     }
@@ -33,13 +33,13 @@ void printHex(uint32_t value) {
     //Loop through digits in reverse
     for (int i = (numDigits - 1) * 4; i >= 0; i -= 4) {
         // Get the current hex digit value
-        uint32_t hex_digit = (value >> i) & 0xF;
+        uint8_t hex_digit = (value >> i) & 0xF;
 
         // Convert the hex digit to its ASCII representation
-        uint32_t hex_char = hex_digit < 10 ? '0' + hex_digit : 'A' + (hex_digit - 10);
+        uint8_t hex_char = hex_digit < 10 ? '0' + hex_digit : 'A' + (hex_digit - 10);
 
         // Print the hex digit
-        putchar((int) hex_char);
+        putchar((char) hex_char);
     }
 }
 
@@ -85,7 +85,7 @@ void printDouble(double num, int minDigitsBeforeDecimal, int minDigitsAfterDecim
     int numDigitsAfterDecimal = minDigitsAfterDecimal;
     while (numDigitsAfterDecimal > 0) {
         num *= 10;
-        char c = ((long) num % 10) + '0';
+        char c = (char)(((long) num % 10) + '0');
         if (c < '0') c = '0'; //hack for bug due to overflow
         putchar(c);
         numDigitsAfterDecimal--;
