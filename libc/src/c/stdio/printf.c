@@ -23,6 +23,24 @@ int printNegativeSignIfNeeded(long* numPtr) {
 }
 
 /**
+ * Print a negative sign if the value pointed to by numPtr is negative
+ * @param numPtr pointer to the value
+ * @return 1 if printing was successful, 0 if not
+ */
+int printNegativeSignIfNeededDouble(double* numPtr) {
+    if (*numPtr < 0) {
+        *numPtr = -*numPtr;
+        int success = putchar('-');
+
+        if(!success) {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+/**
  * Print an integer value.
  * @param num
  * @return 1 if printing was successful, 0 if not
@@ -125,9 +143,7 @@ void printAbsoluteIntegerPortion(double num, int minDigitsBeforeDecimal, int num
 
 int printDouble(double num, int minDigitsBeforeDecimal, int minDigitsAfterDecimal) {
     // Handle negative numbers
-    long longNum = (long)num;
-
-    int success = printNegativeSignIfNeeded(&longNum);
+    int success = printNegativeSignIfNeededDouble(&num);
 
     if(!success) {
         return 0;
