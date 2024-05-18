@@ -1,6 +1,6 @@
-#include "gtest/gtest.h"
-#include "cpuid_mock.h"
 #include "cpuid.h"
+#include "cpuid_mock.h"
+#include "gtest/gtest.h"
 
 TEST(CpuIdTest, TestGetVendorId) {
     setCpuVendor("GenuineIntel");

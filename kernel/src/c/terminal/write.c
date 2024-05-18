@@ -1,5 +1,5 @@
-#include "terminal.h"
 #include "color.h"
+#include "terminal.h"
 
 RgbColor terminalColors[] = {
         { //black

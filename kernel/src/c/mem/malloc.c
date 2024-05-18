@@ -1,5 +1,6 @@
-#include <stdio.h>
 #include "bucket/bucket.h"
+
+#include <stdio.h>
 
 void testMalloc();
 void* dumbMalloc(uint32_t size); //in page.c

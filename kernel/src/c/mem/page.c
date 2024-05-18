@@ -1,11 +1,11 @@
+#include "isr.h"
+#include "paging.h"
+#include "pmm.h"
+#include "system.h"
 
+#include <mem.h>
 #include <stdio.h>
 #include <string.h>
-#include <mem.h>
-#include "pmm.h"
-#include "paging.h"
-#include "system.h"
-#include "isr.h"
 
 /*
  * Page Directory structure:

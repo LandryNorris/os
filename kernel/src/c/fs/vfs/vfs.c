@@ -1,6 +1,7 @@
-#include <string.h>
-#include <mem.h>
 #include "vfs.h"
+
+#include <mem.h>
+#include <string.h>
 
 #define DEFAULT_NUM_CHILDREN 10
 

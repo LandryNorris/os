@@ -1,5 +1,6 @@
-#include <terminal.h>
 #include "color.h"
+
+#include <terminal.h>
 
 void initializeTerminal(Canvas* canvas) {
     terminalCanvas = canvas;

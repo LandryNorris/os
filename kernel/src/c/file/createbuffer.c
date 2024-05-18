@@ -1,5 +1,6 @@
-#include <mem.h>
 #include "buffer.h"
+
+#include <mem.h>
 
 FileBuffer* allocFileBuffer(int size) {
     // we need to allocate an extra byte, so we can distinguish

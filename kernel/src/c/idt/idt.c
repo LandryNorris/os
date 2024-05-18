@@ -1,7 +1,8 @@
-#include <pic.h>
-#include <idt.h>
-#include <string.h>
 #include "isr.h"
+
+#include <idt.h>
+#include <pic.h>
+#include <string.h>
 
 __attribute__((aligned(0x10)))
 IdtEntry idt[NUM_IDT_ENTRIES];

@@ -1,24 +1,24 @@
-#include <stdio.h>
-#include <terminal.h>
-#include <gdt.h>
-#include <string.h>
+#include "cpuid.h"
+#include "createbuffer.h"
+#include "ext2.h"
+#include "ide.h"
 #include "idt.h"
-#include "system.h"
-#include "isr.h"
 #include "interrupts.h"
-#include "paging.h"
-#include "pmm.h"
-#include "serial.h"
+#include "isr.h"
 #include "mem.h"
 #include "multiboot2.h"
-#include "privatestdbuf.h"
-#include "createbuffer.h"
+#include "paging.h"
 #include "pci.h"
-#include "ide.h"
-#include "ext2.h"
-#include "vfs.h"
-#include "cpuid.h"
+#include "pmm.h"
+#include "privatestdbuf.h"
 #include "rsdp.h"
+#include "serial.h"
+#include "system.h"
+#include "vfs.h"
+
+#include <gdt.h>
+#include <stdio.h>
+#include <terminal.h>
 
 __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     uint32_t address = rawAddress + LOAD_MEMORY_ADDRESS;

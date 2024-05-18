@@ -1,5 +1,6 @@
-#include <system.h>
 #include "pci.h"
+
+#include <system.h>
 
 uint32_t pciReadDword(uint8_t bus, uint8_t device, uint8_t function, uint8_t offset) {
     uint32_t id = (bus << 16) | (device << 11) | (function << 8);

@@ -1,7 +1,7 @@
+#include "isr.h"
+#include "system.h"
 
 #include <stdio.h>
-#include "system.h"
-#include "isr.h"
 
 char* exceptionMessages[32] = {
         "Divide By Zero",
