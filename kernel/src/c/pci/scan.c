@@ -1,7 +1,7 @@
-
-#include <stdio.h>
-#include <mem.h>
 #include "pci.h"
+
+#include <mem.h>
+#include <stdio.h>
 
 void pciScan(PciBus* pciBus) {
     printf("Scanning PCI pciBus...\n");

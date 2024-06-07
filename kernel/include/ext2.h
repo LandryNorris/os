@@ -1,8 +1,10 @@
 #ifndef OS_EXT2_H
 #define OS_EXT2_H
 
-#include <stdint.h>
+#include "ide.h"
 #include "vfs.h"
+
+#include <stdint.h>
 
 typedef struct {
     uint32_t inodeCount;

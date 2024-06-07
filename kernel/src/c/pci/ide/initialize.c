@@ -1,6 +1,7 @@
-#include <stdio.h>
 #include "ide.h"
 #include "system.h"
+
+#include <stdio.h>
 
 Ide ide;
 uint8_t ideBuffer[2048];

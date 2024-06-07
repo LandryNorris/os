@@ -1,8 +1,8 @@
+#include "cpuid_mock.h"
+
 #include <cstdio>
 #include <cstring>
 #include <gtest/gtest.h>
-
-#include "cpuid_mock.h"
 
 typedef struct {
     char name[12];

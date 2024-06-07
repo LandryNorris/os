@@ -1,6 +1,7 @@
 #ifndef OS_PAGING_H
 #define OS_PAGING_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 typedef struct {

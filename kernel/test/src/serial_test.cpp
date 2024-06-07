@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
 
 extern "C" {
-#include "serial.h"
 #include "portio_mock.h"
+#include "serial.h"
 }
 
 TEST(SerialTest, initializeSerial) {

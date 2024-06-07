@@ -1,6 +1,6 @@
+#include "pmm.h"
 
 #include <stdio.h>
-#include "pmm.h"
 
 /**
  * This bitmap is used to determine which pages are currently in use.

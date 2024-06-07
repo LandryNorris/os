@@ -1,6 +1,8 @@
 #ifndef OS_PCI_H
 #define OS_PCI_H
 
+#include <stdint.h>
+
 #define PCI_CONFIG_ADDRESS 0xCF8
 #define PCI_CONFIG_DATA 0xCFC
 
