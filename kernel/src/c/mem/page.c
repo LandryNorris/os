@@ -212,6 +212,19 @@ static inline uint32_t alignToPage(uint32_t ptr) {
     return (ptr & ALIGN_4K_MASK);
 }
 
+/**
+ * Allocate a physical region where the virtual and
+ * physical addresses of memory will match. Only
+ * whole pages can be allocated this way, and only
+ * if those pages have not been allocated yet.
+ *
+ * @param address allocate starting from the page before
+ *      this address. If any memory is allocated, this
+ *      address will be valid memory.
+ * @param length length in bytes to allocate for. Note that
+ *      only whole pages will be allocated, rounded down.
+ * @return the page-aligned address of the allocated region
+ */
 void* mmapPhysical(void* address, size_t length) {
     size_t numPages = length / PAGE_SIZE;
     uint32_t alignedAddress = alignToPage((uint32_t) address);
