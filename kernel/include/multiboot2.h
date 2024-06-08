@@ -2,7 +2,7 @@
 #define OS_MULTIBOOT2_H
 
 #include <stdint.h>
-#include "rsdp.h"
+#include "acpi/rsdp.h"
 
 typedef struct {
     uint8_t redPosition;

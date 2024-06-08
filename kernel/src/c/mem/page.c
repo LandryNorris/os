@@ -22,6 +22,9 @@
  * [1024 ]
  */
 
+#define ALIGN_4K_MASK 0xFFFFF000U
+#define WITHIN_4K_MASK 0x00000FFFU
+
 void* tableAllocatorPtr;
 int isPagingEnabled = 0;
 
@@ -198,15 +201,30 @@ void setPageDirectory(PageDirectory* dir) {
 }
 
 /**
- * Align a pointer to the next 4K alignment, or return it if it is aligned
+ * Align a pointer to the previous 4K alignment, or return it if it is aligned
  * @param ptr
  * @return
  */
 static inline uint32_t alignToPage(uint32_t ptr) {
-    if ((ptr & 0x0000FFF) == 0) return ptr;
-    return (ptr & 0xFFFFF000) + 0x1000;
+    if ((ptr & WITHIN_4K_MASK) == 0) {
+        return ptr;
+    }
+    return (ptr & ALIGN_4K_MASK);
 }
 
+/**
+ * Allocate a physical region where the virtual and
+ * physical addresses of memory will match. Only
+ * whole pages can be allocated this way, and only
+ * if those pages have not been allocated yet.
+ *
+ * @param address allocate starting from the page before
+ *      this address. If any memory is allocated, this
+ *      address will be valid memory.
+ * @param length length in bytes to allocate for. Note that
+ *      only whole pages will be allocated, rounded down.
+ * @return the page-aligned address of the allocated region
+ */
 void* mmapPhysical(void* address, size_t length) {
     size_t numPages = length / PAGE_SIZE;
     uint32_t alignedAddress = alignToPage((uint32_t) address);
@@ -215,7 +233,7 @@ void* mmapPhysical(void* address, size_t length) {
         uint32_t pageAddress = alignedAddress + i * PAGE_SIZE;
         //ToDo: check if page is not already allocated
         if (isPageAllocated(pageDirectory, pageAddress)) {
-            printf("Page %x is already allocated!\n", pageAddress);
+            return (void*) alignedAddress;
         }
         allocatePhysicalPage(pageDirectory, pageAddress, pageAddress);
     }
