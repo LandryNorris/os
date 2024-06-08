@@ -1,4 +1,4 @@
-#include "rsdp.h"
+#include "acpi/rsdp.h"
 
 int getAcpiVersion(RSDP* rsdp) {
     if(rsdp->revision == 0 || rsdp->revision == 1) return 1;

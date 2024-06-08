@@ -1,3 +1,5 @@
+#include "acpi/rsdp.h"
+#include "acpi/rsdt.h"
 #include "cpuid.h"
 #include "createbuffer.h"
 #include "ext2.h"
@@ -11,7 +13,6 @@
 #include "pci.h"
 #include "pmm.h"
 #include "privatestdbuf.h"
-#include "rsdp.h"
 #include "serial.h"
 #include "system.h"
 #include "vfs.h"
@@ -39,6 +40,8 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     serialPrint(&com1, "Initializing Paging\n");
     initPaging();
 
+    loadAcpiTables(&bootInfo.rsdp);
+
     mmapPhysical(bootInfo.framebuffer, bootInfo.pitch*bootInfo.height);
 
     Canvas canvas;
@@ -55,10 +58,6 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     initializeBuffers(in, out);
 
     registerInterruptHandler(0x20 + 1, handleKeyboard);
-
-    int isValidRsdp = validateRSDP(&bootInfo.rsdp);
-
-    printf("Is RSDP valid? %d\n", isValidRsdp);
 
     PciBus* pciBus = malloc(sizeof(PciBus));
 

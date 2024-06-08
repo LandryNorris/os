@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
 extern "C" {
-#include "rsdp.h"
+#include "acpi/rsdp.h"
 }
 
 TEST(RSDPTest, CheckValidRSDP) {

@@ -22,6 +22,9 @@
  * [1024 ]
  */
 
+#define ALIGN_4K_MASK 0xFFFFF000U
+#define WITHIN_4K_MASK 0x00000FFFU
+
 void* tableAllocatorPtr;
 int isPagingEnabled = 0;
 
@@ -198,13 +201,15 @@ void setPageDirectory(PageDirectory* dir) {
 }
 
 /**
- * Align a pointer to the next 4K alignment, or return it if it is aligned
+ * Align a pointer to the previous 4K alignment, or return it if it is aligned
  * @param ptr
  * @return
  */
 static inline uint32_t alignToPage(uint32_t ptr) {
-    if ((ptr & 0x0000FFF) == 0) return ptr;
-    return (ptr & 0xFFFFF000) + 0x1000;
+    if ((ptr & WITHIN_4K_MASK) == 0) {
+        return ptr;
+    }
+    return (ptr & ALIGN_4K_MASK);
 }
 
 void* mmapPhysical(void* address, size_t length) {
@@ -215,7 +220,7 @@ void* mmapPhysical(void* address, size_t length) {
         uint32_t pageAddress = alignedAddress + i * PAGE_SIZE;
         //ToDo: check if page is not already allocated
         if (isPageAllocated(pageDirectory, pageAddress)) {
-            printf("Page %x is already allocated!\n", pageAddress);
+            return (void*) alignedAddress;
         }
         allocatePhysicalPage(pageDirectory, pageAddress, pageAddress);
     }
