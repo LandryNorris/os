@@ -1,5 +1,6 @@
 name: iso
 on:
+  pull_request:
   push:
     branches:
       - main
