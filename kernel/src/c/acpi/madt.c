@@ -8,6 +8,7 @@ int isMadtSignature(char* s) {
     return s[0] == 'A' && s[1] == 'P' && s[2] == 'I' && s[3] == 'C';
 }
 
+// NOLINTBEGIN(readability-magic-numbers)
 void parseApicInfo(const MADTRecordHeader* record, ApicInfo* info) {
     switch(record->type) {
         case MADT_TYPE_PROCESSOR_LOCAL_APIC: {
@@ -58,6 +59,7 @@ void parseApicInfo(const MADTRecordHeader* record, ApicInfo* info) {
         default: break;
     }
 }
+// NOLINTEND(readability-magic-numbers)
 
 void parseMadt(MADTLiteral* madt) {
     if(!isMadtSignature(madt->header.signature)) {
