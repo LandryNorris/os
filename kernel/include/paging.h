@@ -1,33 +1,37 @@
 #ifndef OS_PAGING_H
 #define OS_PAGING_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stddef.h>
 #include <stdint.h>
 
 typedef struct {
-    uint32_t present    : 1;
-    uint32_t rw         : 1;
-    uint32_t user       : 1;
-    uint32_t reserved   : 2;
-    uint32_t accessed   : 1;
-    uint32_t dirty      : 1;
-    uint32_t reserved2  : 2;
-    uint32_t available  : 3;
-    uint32_t frame      : 20;
+    uint32_t present: 1;
+    uint32_t rw: 1;
+    uint32_t user: 1;
+    uint32_t reserved: 2;
+    uint32_t accessed: 1;
+    uint32_t dirty: 1;
+    uint32_t reserved2: 2;
+    uint32_t available: 3;
+    uint32_t frame: 20;
 } PageTableEntry;
 
 typedef struct {
-    uint32_t present    : 1;
-    uint32_t writable         : 1;
-    uint32_t user       : 1;
-    uint32_t w_through  : 1;
-    uint32_t cache      : 1;
-    uint32_t access     : 1;
-    uint32_t reserved   : 1;
-    uint32_t largePage  : 1;
-    uint32_t global     : 1;
-    uint32_t available  : 3;
-    uint32_t frame      : 20;
+    uint32_t present: 1;
+    uint32_t writable: 1;
+    uint32_t user: 1;
+    uint32_t w_through: 1;
+    uint32_t cache: 1;
+    uint32_t access: 1;
+    uint32_t reserved: 1;
+    uint32_t largePage: 1;
+    uint32_t global: 1;
+    uint32_t available: 3;
+    uint32_t frame: 20;
 } PageDirectoryEntry;
 
 typedef struct {
@@ -71,5 +75,9 @@ extern void setPageDirectoryLowLevel(uint32_t dir);
 void* mmapPhysical(void* address, size_t length);
 void* mmap(void* address, size_t length);
 void* munmap(void* address, size_t length);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //OS_PAGING_H
