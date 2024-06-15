@@ -1,5 +1,5 @@
-#include "acpi/rsdp.h"
 #include "acpi/rsdt.h"
+#include "cpu_structure.h"
 #include "cpuid.h"
 #include "createbuffer.h"
 #include "ext2.h"
@@ -16,7 +16,6 @@
 #include "serial.h"
 #include "system.h"
 #include "vfs.h"
-#include "cpu_structure.h"
 
 #include <gdt.h>
 #include <stdio.h>
