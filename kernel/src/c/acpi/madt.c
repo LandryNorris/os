@@ -1,5 +1,6 @@
 #include "acpi/acpiPreload.h"
 #include "acpi/madt.h"
+#include <stdbool.h>
 
 static ApicInfo apicInfoList[MAX_APICS];
 static int numAcpiInfo = 0;
@@ -10,11 +11,12 @@ int isMadtSignature(char* s) {
 
 // NOLINTBEGIN(readability-magic-numbers)
 void parseApicInfo(const MADTRecordHeader* record, ApicInfo* info) {
+    info->type = record->type;
     switch(record->type) {
         case MADT_TYPE_PROCESSOR_LOCAL_APIC: {
             info->processorLocalApic.processorId = record->data[0];
             info->processorLocalApic.apicId = record->data[1];
-            info->processorLocalApic.flags = *((uint32_t*)(record->data + 3));
+            info->processorLocalApic.flags = *((uint32_t*)(record->data + 2));
             break;
         }
         case MADT_TYPE_IO_APIC: {
@@ -80,4 +82,22 @@ void parseMadt(MADTLiteral* madt) {
         numAcpiInfo++;
         lengthParsedSoFar += record->length;
     }
+}
+
+bool readApicInfo(int index, ApicInfo* info) {
+    if(index >= numAcpiInfo) {
+        return false;
+    }
+
+    *info = apicInfoList[index];
+
+    return true;
+}
+
+bool isProcessorEnabled(ProcessorLocalApic* apic) {
+    return apic->flags & 0x1;
+}
+
+bool canProcessorBeEnabled(ProcessorLocalApic* apic) {
+    return apic->flags & 0x2;
 }

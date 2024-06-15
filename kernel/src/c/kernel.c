@@ -16,6 +16,7 @@
 #include "serial.h"
 #include "system.h"
 #include "vfs.h"
+#include "cpu_structure.h"
 
 #include <gdt.h>
 #include <stdio.h>
@@ -78,6 +79,8 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
         Ext2Fs ext2Fs;
         mountExt2(&ide.devices[0], &ext2Fs, &vfsRoot);
     }
+
+    loadCpuList();
 
     if(hasCpuId()) {
         printf("CPU ID is present\n");
