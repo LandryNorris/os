@@ -42,6 +42,19 @@ typedef struct __attribute__ ((packed)) {
     uint32_t otherSdtPointers[];
 } RSDT;
 
+typedef struct __attribute__ ((packed)) {
+    uint8_t type;
+    uint8_t length;
+    uint8_t data[];
+} SRATRecordHeader;
+
+typedef struct __attribute__ ((packed)) {
+    ACPISdtHeader header;
+    uint8_t reserved[12];
+} SRATLiteral;
+
+
+
 void loadAcpiTables(RSDP* rsdp);
 
 #endif //KERNEL_ACPIPRELOAD_H

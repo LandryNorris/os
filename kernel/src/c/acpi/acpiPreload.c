@@ -2,6 +2,7 @@
 #include "acpi/madt.h"
 #include "acpi/rsdp.h"
 #include "acpi/rsdt.h"
+#include "acpi/srat.h"
 
 /*
  * Everything in this file will run before we've set up
@@ -28,6 +29,8 @@ void loadAcpiTables(RSDP* rsdp) {
         ACPISdtHeader * table = (ACPISdtHeader*) rsdt->otherSdtPointers[i];
         if(isMadtSignature(table->signature)) {
             parseMadt((MADTLiteral*) table);
+        } else if(isSRATSignature(table->signature)) {
+            parseSRAT((SRATLiteral*) table);
         }
     }
 }
