@@ -6,13 +6,13 @@
 #include "acpi/srat.h"
 
 static SRATInfo sratInfoList[MAX_NUMA];
-int numSRATInfo = 0;
+static int numSRATInfo = 0;
 
 int isSRATSignature(char* s) {
     return s[0] == 'S' && s[1] == 'R' && s[2] == 'A' && s[3] == 'T';
 }
 
-// NOLINTBEGIN(readability-magic-numbers)
+// NOLINTBEGIN(readability-magic-numbers, readability-function-size)
 void parseSRATInfo(const SRATRecordHeader* record, SRATInfo* info) {
     info->type = record->type;
     switch(record->type) {
@@ -50,7 +50,7 @@ void parseSRATInfo(const SRATRecordHeader* record, SRATInfo* info) {
         default: break;
     }
 }
-// NOLINTEND(readability-magic-numbers)
+// NOLINTEND(readability-magic-numbers, readability-function-size)
 
 void parseSRAT(SRATLiteral* srat) {
     if(!isSRATSignature(srat->header.signature)) {
@@ -58,6 +58,7 @@ void parseSRAT(SRATLiteral* srat) {
     }
 
     // the SRAT has a header and 12 bytes before its list
+    // NOLINTNEXTLINE(readability-magic-numbers)
     int lengthParsedSoFar = sizeof(ACPISdtHeader) + 12;
 
     int i = 0;
