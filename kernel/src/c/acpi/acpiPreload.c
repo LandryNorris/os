@@ -3,6 +3,7 @@
 #include "acpi/rsdp.h"
 #include "acpi/rsdt.h"
 #include "acpi/srat.h"
+#include "acpi/hpet.h"
 
 /*
  * Everything in this file will run before we've set up
@@ -31,6 +32,8 @@ void loadAcpiTables(RSDP* rsdp) {
             parseMadt((MADTLiteral*) table);
         } else if(isSRATSignature(table->signature)) {
             parseSRAT((SRATLiteral*) table);
+        } else if(isHPETSignature(table->signature)) {
+            parseHPET((HPETLiteral*) table);
         }
     }
 }
