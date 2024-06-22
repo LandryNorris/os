@@ -3,6 +3,7 @@
 
 #include "acpiPreload.h"
 #include <stdint.h>
+#include <stdbool.h>
 
 #define MAX_APICS 15
 
@@ -70,5 +71,9 @@ typedef struct {
 
 int isMadtSignature(char* s);
 void parseMadt(MADTLiteral* madt);
+bool readApicInfo(int index, ApicInfo* info);
+
+bool isProcessorEnabled(ProcessorLocalApic* apic);
+bool canProcessorBeEnabled(ProcessorLocalApic* apic);
 
 #endif //KERNEL_MADT_H
