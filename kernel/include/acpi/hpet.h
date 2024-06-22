@@ -19,7 +19,6 @@ typedef struct {
 
     uint8_t numComparators;
 
-
     uint16_t vendorId;
     uint32_t periodFemptoseconds;
 } HPET;

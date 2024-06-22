@@ -67,7 +67,7 @@ typedef struct __attribute__ ((packed)) {
     uint8_t hardwareRev;
 
     uint8_t comparatorCount:5;
-    uint8_t counterSize:1;
+    uint8_t supports64Bit:1;
     uint8_t reserved: 1;
     uint8_t legacyReplacement:1;
 
