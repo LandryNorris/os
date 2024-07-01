@@ -16,6 +16,7 @@
 #include "serial.h"
 #include "system.h"
 #include "vfs.h"
+#include "acpi/hpet.h"
 
 #include <gdt.h>
 #include <stdio.h>
@@ -64,6 +65,9 @@ __attribute__((unused)) void kernel_main(uint32_t magic, uint32_t rawAddress) {
     pciScan(pciBus);
 
     initializeIdeCompatibility();
+
+    startTimeCounter(1);
+    setHPETEnabled(true);
 
     for(int i = 0; i < 4; i++) {
         IdeDevice* device = &ide.devices[i];
