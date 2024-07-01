@@ -2,6 +2,7 @@
 #include "acpi/hpet.h"
 #include "paging.h"
 #include "pmm.h"
+#include "isr.h"
 
 HPET hpet;
 
@@ -61,7 +62,7 @@ void parseHPET(HPETLiteral* hpetTable) {
     parseHPETConfiguration();
     parseTimers();
 
-    hpet.counterRegister = (uint64_t*) (hpet.registerAddress + 0x20U);
+    hpet.counterRegister = (uint64_t*) (hpet.registerAddress + 0xF0U);
 }
 
 void setHPETEnabled(bool isEnabled) {
@@ -95,15 +96,58 @@ void setTimerComparator(int timer, uint64_t comparatorValue) {
     *hpet.timers[timer].comparatorRegister = comparatorValue;
 }
 
-void startPeriodicTimer(int timer, int frequency) {
-    int periodFemptoSeconds = (int) (1e15 / frequency);
+void setTimerComparatorEnabled(int timer, bool enabled) {
+    uint64_t* configRegister = timerConfigRegister(timer);
 
-    int numTicks = periodFemptoSeconds / hpet.periodFemptoseconds;
+    if(enabled) {
+        *configRegister |= TIMER_ENABLED_MASK;
+    } else {
+        *configRegister &= ~TIMER_ENABLED_MASK;
+    }
 
+    hpet.timers[timer].enabled = enabled;
+}
 
+void setPeriodicTimerFrequency(int timer, int frequency) {
+    double periodFemptoSeconds = (1e15*1.0 / frequency);
+
+    uint32_t numTicks = periodFemptoSeconds / hpet.periodFemptoseconds;
 
     // The timer is still going. We want to minimize time between
     // reading counter register and setting time to trigger.
-    int timeToTrigger = getMainCounterValue() + numTicks;
+    uint64_t timeToTrigger = getMainCounterValue() + numTicks;
     setTimerComparator(timer, timeToTrigger);
+}
+
+bool setTimerCallback(int timer, int irq, isr irqHandler) {
+    uint64_t* configRegister = timerConfigRegister(timer);
+
+    uint64_t availabilityMask = (*configRegister) >> 32U;
+    if((availabilityMask & (1U << irq)) == 0) {
+        return false;
+    }
+
+    uint64_t other = *configRegister & TIMER_CONFIG_WITHOUT_INT_ROUTE_MASK;
+
+    const uint64_t newValue = (irq << 9) | other;
+    *configRegister = newValue;
+
+    registerInterruptHandler(irq, irqHandler);
+
+    return true;
+}
+
+uint32_t counterMs = 0;
+
+void handleHPETPeriodicTimer(Register* r) {
+    counterMs++;
+}
+
+void startTimeCounter(int timer) {
+    setPeriodicTimerFrequency(timer, 1000);
+    bool success = setTimerCallback(timer, 2, handleHPETPeriodicTimer);
+
+    if(success) {
+        setTimerComparatorEnabled(timer, true);
+    }
 }
