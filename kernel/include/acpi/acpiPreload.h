@@ -53,7 +53,30 @@ typedef struct __attribute__ ((packed)) {
     uint8_t reserved[12];
 } SRATLiteral;
 
+typedef struct __attribute__ ((packed)) {
+    uint8_t addressSpaceId;
+    uint8_t registerBitWidth;
+    uint8_t registerBitOffset;
+    uint8_t reserved;
+    uint64_t address;
+} HPETAddress;
 
+typedef struct __attribute__ ((packed)) {
+    ACPISdtHeader header;
+
+    uint8_t hardwareRev;
+
+    uint8_t comparatorCount:5;
+    uint8_t supports64Bit:1;
+    uint8_t reserved: 1;
+    uint8_t legacyReplacement:1;
+
+    uint16_t pciVendorAddress;
+    HPETAddress addressInfo;
+    uint8_t hpetNumber;
+    uint16_t minimumTick;
+    uint8_t pageProtection;
+} HPETLiteral;
 
 void loadAcpiTables(RSDP* rsdp);
 
