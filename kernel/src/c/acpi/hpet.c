@@ -55,7 +55,7 @@ void parseHPET(HPETLiteral* hpetTable) {
         return;
     }
 
-    mmapPhysical((void*) hpetTable->addressInfo.address, PAGE_SIZE);
+    mmapPhysical((void*) hpetTable->addressInfo.address, 2*PAGE_SIZE);
 
     hpet.registerAddress = hpetTable->addressInfo.address;
 
@@ -73,6 +73,16 @@ void setHPETEnabled(bool isEnabled) {
         *generalConfigRegister |= HPET_CONFIG_ENABLED_MASK;
     } else {
         *generalConfigRegister &= ~HPET_CONFIG_ENABLED_MASK;
+    }
+}
+
+void setHPETLegacyMappingEnabled(bool isEnabled) {
+    uint64_t* generalConfigRegister = (uint64_t*) (hpet.registerAddress + 0x10U);
+
+    if(isEnabled) {
+        *generalConfigRegister |= HPET_CONFIG_USE_LEGACY_MAPPING;
+    } else {
+        *generalConfigRegister &= ~HPET_CONFIG_USE_LEGACY_MAPPING;
     }
 }
 

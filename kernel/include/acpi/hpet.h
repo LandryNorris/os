@@ -6,6 +6,7 @@
 #include <stdbool.h>
 
 #define HPET_CONFIG_ENABLED_MASK 0x1U
+#define HPET_CONFIG_USE_LEGACY_MAPPING (1U << 1U)
 #define TIMER_CONFIG_SET_32_BIT_MODE_MASK (1U << 8U)
 #define TIMER_IS_PERIODIC_MASK (1U << 3U)
 #define TIMER_ENABLED_MASK (1U << 2U)
@@ -48,6 +49,7 @@ int isHPETSignature(char* s);
 void parseHPET(HPETLiteral* table);
 
 void setHPETEnabled(bool isEnabled);
+void setHPETLegacyMappingEnabled(bool isEnabled);
 bool setTimerCallback(int timer, int irq, isr irqHandler);
 void setPeriodicTimerFrequency(int timer, int frequency);
 void startTimeCounter(int timer);
